@@ -4,6 +4,7 @@ and may not be redistributed without written permission.*/
 //Using SDL and standard IO
 #include <SDL.h>
 #include <stdio.h>
+#include <string>
 
 
 //Screen dimension constants
@@ -54,16 +55,16 @@ bool init()
 
 
 
-bool loadMedia()
+bool loadMedia(std::string path)
 {
 	//Loading success flag
 	bool success = true;
 
 	//Load splash image
-	gHelloWorld = SDL_LoadBMP("hello.bmp");
+	gHelloWorld = SDL_LoadBMP(path.c_str());
 	if (gHelloWorld == NULL)
 	{
-		printf("Unable to load image %s! SDL Error: %s\n", "hello_world.bmp", SDL_GetError());
+		printf("Unable to load image %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
 		success = false;
 	}
 	printf("image loaded!\n");
@@ -87,12 +88,13 @@ void close()
 int main(int argc, char* args[]){
 	//Initialize SDL
 	bool quit = false;
+	std::string media = "hello.bmp";
 	SDL_Event e;
 	if (!init()){
 		printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
 		quit = true;
 	}
-	if (!loadMedia()){
+	if (!loadMedia("hello.bmp")) {
 		printf("Failed to load media! %s\n", SDL_GetError());
 		quit = true;
 	}
@@ -105,18 +107,24 @@ int main(int argc, char* args[]){
 			}
 			switch (e.key.keysym.sym) {
 				case SDLK_UP:
-					printf("Up arrow pressed!\n");
+					printf("up arrow pressed!\n");
+					loadMedia("upArrow.bmp");
 					break;
 				case SDLK_DOWN:
 					printf("down arrow pressed!\n");
+					loadMedia("downArrow.bmp");
 					break;
 				case SDLK_LEFT:
 					printf("left arrow pressed!\n");
+					loadMedia("leftArrow.bmp");
 					break;
 				case SDLK_RIGHT:
 					printf("right arrow pressed!\n");
+					loadMedia("rightArrow.bmp");
 					break;
 				default:
+					printf("%s", e.key.keysym);
+					loadMedia("hello.bmp");
 					break;
 			}
 			SDL_BlitSurface(gHelloWorld, NULL, gScreenSurface, NULL);
