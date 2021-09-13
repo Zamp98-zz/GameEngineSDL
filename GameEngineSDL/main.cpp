@@ -5,6 +5,7 @@ and may not be redistributed without written permission.*/
 #include <SDL.h>
 #include <stdio.h>
 #include <string>
+#include "ObjLoader.h"
 
 
 //Screen dimension constants
@@ -88,6 +89,11 @@ void close()
 int main(int argc, char* args[]){
 	//Initialize SDL
 	bool quit = false;
+	//SDL_RendererInfo info;
+	//SDL_Renderer *renderer = SDL_CreateRenderer(gWindow, 0, 0);
+
+	//SDL_GetRenderDriverInfo(renderer, info);
+	//printf("%s", info.name);
 	std::string media = "hello.bmp";
 	SDL_Event e;
 	if (!init()){
@@ -98,6 +104,7 @@ int main(int argc, char* args[]){
 		printf("Failed to load media! %s\n", SDL_GetError());
 		quit = true;
 	}
+	Entity a = loadEntity("Entity/cube.obj");
 	while (!quit) {
 		//Handle events on queue
 		while (SDL_PollEvent(&e) != 0) {
@@ -129,7 +136,7 @@ int main(int argc, char* args[]){
 			}
 			SDL_BlitSurface(gHelloWorld, NULL, gScreenSurface, NULL);
 			SDL_UpdateWindowSurface(gWindow);
-			SDL_Delay(33);
+			SDL_Delay(100);
 		}
 	}
 	//Destroy window
