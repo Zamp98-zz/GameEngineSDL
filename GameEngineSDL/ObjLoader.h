@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <fstream>
+using namespace std;
 
 struct Color {
 	int red;
@@ -27,17 +28,27 @@ struct Normal {
 };
 struct Face {
 	int id;
+	int capacity;
 	Color color;
-	std::vector<int> vertices;
-	std::vector<int> normals;
-	std::vector<int> textures;
+	std::vector<int> Vertices;
+	std::vector<int> Normals;
+	std::vector<int> Textures;
+};
+struct Edge {
+	int a;
+	int b;
 };
 class Entity {
 public:
 	int EdgeAmount;
 	int vertexAmount;
 	int faceAmount;
-	std::vector<Vertex> vertices;
+	int textureAmount;
+	vector<Vertex> Vertices;
+	vector<Texture> Textures;
+	vector<Normal> Normals;
+	vector<Face> Faces;
+	vector<Edge> Edges;
 };
 
 Entity loadEntity(std::string path);

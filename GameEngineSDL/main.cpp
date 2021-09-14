@@ -22,7 +22,10 @@ SDL_Surface* gHelloWorld = NULL;
 
 //Key press surfaces constants
 
+SDL_Renderer* gRenderer = NULL;
 
+
+SDL_Texture* gTexture = NULL;
 
 bool init()
 {
@@ -38,6 +41,7 @@ bool init()
 	else
 	{
 		//Create window
+		gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
 		gWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 		if (gWindow == NULL)
 		{
@@ -115,23 +119,23 @@ int main(int argc, char* args[]){
 			switch (e.key.keysym.sym) {
 				case SDLK_UP:
 					printf("up arrow pressed!\n");
-					loadMedia("upArrow.bmp");
+					//loadMedia("upArrow.bmp");
 					break;
 				case SDLK_DOWN:
 					printf("down arrow pressed!\n");
-					loadMedia("downArrow.bmp");
+					//loadMedia("downArrow.bmp");
 					break;
 				case SDLK_LEFT:
 					printf("left arrow pressed!\n");
-					loadMedia("leftArrow.bmp");
+					//loadMedia("leftArrow.bmp");
 					break;
 				case SDLK_RIGHT:
 					printf("right arrow pressed!\n");
-					loadMedia("rightArrow.bmp");
+					//loadMedia("rightArrow.bmp");
 					break;
 				default:
 					printf("%s", e.key.keysym);
-					loadMedia("hello.bmp");
+					//loadMedia("hello.bmp");
 					break;
 			}
 			SDL_BlitSurface(gHelloWorld, NULL, gScreenSurface, NULL);
