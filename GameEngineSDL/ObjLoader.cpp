@@ -66,7 +66,7 @@ Entity loadEntity(std::string path)
 				//printf("This is a s\n");
 			}
 			else if (prefix == "f") {
-				std::printf("This is a face\n");
+				//std::printf("This is a face\n");
 				Face f;
 				f.capacity = 0;
 				std::vector<std::string> aux = split(line, ' ');
