@@ -40,7 +40,7 @@ struct Edge {
 };
 class Entity {
 public:
-	int EdgeAmount;
+	int edgeAmount;
 	int vertexAmount;
 	int faceAmount;
 	int textureAmount;
