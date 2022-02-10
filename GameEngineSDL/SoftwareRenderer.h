@@ -35,9 +35,9 @@ class Object {
 		}
 };
 
-class Perspective {
+class Perspective: public Position {
 	public:
-		Position settings;
+		float matrix[4][4];
 };
 
 class Camera: public Object{

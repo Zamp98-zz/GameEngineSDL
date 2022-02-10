@@ -145,6 +145,7 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ObjLoader.cpp" />
+    <ClCompile Include="SoftwareRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ObjLoader.h" />
