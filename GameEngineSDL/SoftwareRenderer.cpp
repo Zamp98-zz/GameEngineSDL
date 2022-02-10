@@ -38,4 +38,3 @@ DisplayList applyPerspective(DisplayList l, Perspective p) {
 	}
 	return l;
 }
-

@@ -144,10 +144,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="ObjLoader.cpp" />
     <ClCompile Include="SoftwareRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Matrix.h" />
     <ClInclude Include="ObjLoader.h" />
     <ClInclude Include="SoftwareRenderer.h" />
   </ItemGroup>
