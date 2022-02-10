@@ -61,5 +61,5 @@ class DisplayList {
 	
 };
 
-void renderWireframe(SDL_Renderer* gRenderer, DisplayList l);
+SDL_Renderer * renderWireframe(SDL_Renderer* gRenderer, DisplayList l);
 DisplayList applyPerspective(DisplayList l, Perspective p);
