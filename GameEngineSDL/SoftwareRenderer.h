@@ -4,6 +4,7 @@
 #include <fstream>
 #include "ObjLoader.h"
 #include <SDL.h>
+#include "Matrix.h"
 
 using namespace std;
 
@@ -61,5 +62,7 @@ class DisplayList {
 	
 };
 
+
+DisplayList scale(float s, DisplayList l);
 SDL_Renderer * renderWireframe(SDL_Renderer* gRenderer, DisplayList l);
 DisplayList applyPerspective(DisplayList l, Perspective p);

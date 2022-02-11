@@ -8,6 +8,7 @@ and may not be redistributed without written permission.*/
 #include <string>
 #include <cmath>
 #include "ObjLoader.h"
+#include "SoftwareRenderer.h"
 
 //Screen dimension constants
 const int SCREEN_WIDTH = 640;
@@ -139,6 +140,7 @@ int main(int argc, char* args[])
 	//Start up SDL and create window
 	int px = 0;
 	int py = 0;
+	float x = .0;
 	if (!init())
 	{
 		printf("Failed to initialize!\n");
@@ -160,6 +162,8 @@ int main(int argc, char* args[])
 
 			//While application is running
 			Entity a = loadEntity("Entity/cube.obj");
+			DisplayList list;
+			list.insert(a);
 			while (!quit)
 			{
 				while (SDL_PollEvent(&e) != 0) {
@@ -191,15 +195,17 @@ int main(int argc, char* args[])
 					default:
 						printf("%s", e.key.keysym);
 						//loadMedia("hello.bmp");
+						x += .5;
+						list = scale(x, list);
 						break;
 					}
 
 					//Clear screen
-					SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+					SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0xFF);
 					SDL_RenderClear(gRenderer);
 
 					//Render red filled quad
-					SDL_Rect fillRect;// = { SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 };
+					/*SDL_Rect fillRect;// = { SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 };
 					fillRect.h = 20;
 					fillRect.w = 20;
 					fillRect.x = px;
@@ -207,9 +213,10 @@ int main(int argc, char* args[])
 					
 					SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
 					SDL_RenderFillRect(gRenderer, &fillRect);
-
+					*/
 					//Render green outlined quad
-					SDL_Rect outlineRect = { SCREEN_WIDTH / 6, SCREEN_HEIGHT / 6, SCREEN_WIDTH * 2 / 3, SCREEN_HEIGHT * 2 / 3 };
+					
+					/*SDL_Rect outlineRect = {SCREEN_WIDTH / 6, SCREEN_HEIGHT / 6, SCREEN_WIDTH * 2 / 3, SCREEN_HEIGHT * 2 / 3};
 					SDL_SetRenderDrawColor(gRenderer, 0x00, 0xFF, 0x00, 0xFF);
 					SDL_RenderDrawRect(gRenderer, &outlineRect);
 
@@ -223,10 +230,11 @@ int main(int argc, char* args[])
 					{
 						SDL_RenderDrawPoint(gRenderer, SCREEN_WIDTH / 2, i);
 					}
-
+					*/
 					//Update screen
+					renderWireframe(gRenderer, list);
 					SDL_RenderPresent(gRenderer);
-					SDL_Delay(33);
+					SDL_Delay(333);
 				}
 			}
 		}
