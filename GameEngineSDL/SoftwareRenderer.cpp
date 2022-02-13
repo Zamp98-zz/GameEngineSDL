@@ -39,6 +39,37 @@ DisplayList scale(float s, DisplayList l) {
 	return l;
 }
 
+DisplayList rotateObjects(DisplayList l, float angle, int axis) {
+	int t = l.objects.size();
+	int i;
+	for (i = 0; i < t; i++) {
+		int t = l.objects[i].Vertices.size();
+		int j;
+		for (j = 0; j < t; j++) {
+			Matrix temp;
+			//temp.init();
+			temp.values[0][0] = l.objects[i].Vertices[j].x;
+			temp.values[0][1] = l.objects[i].Vertices[j].y;
+			temp.values[0][2] = l.objects[i].Vertices[j].z;
+			temp.values[0][3] = l.objects[i].Vertices[j].w;
+			if (axis == X) {
+				temp = rotateX(temp.values, angle);
+			}
+			else if (axis == Y) {
+				temp = rotateY(temp.values, angle);
+			}
+			else {
+				temp = rotateZ(temp.values, angle);
+			}
+			l.objects[i].Vertices[j].x = temp.values[0][0];
+			l.objects[i].Vertices[j].y = temp.values[0][1];
+			l.objects[i].Vertices[j].z = temp.values[0][2];
+			l.objects[i].Vertices[j].w = temp.values[0][3];
+		}
+	}
+	return l;
+}
+
 SDL_Renderer* renderWireframe(SDL_Renderer* gRenderer, DisplayList l) {
 	//TODO
 	int t = l.objects.size();

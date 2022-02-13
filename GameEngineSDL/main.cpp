@@ -140,7 +140,7 @@ int main(int argc, char* args[])
 	//Start up SDL and create window
 	int px = 0;
 	int py = 0;
-	float x = .0;
+	float x = 100.0;
 	if (!init())
 	{
 		printf("Failed to initialize!\n");
@@ -164,6 +164,7 @@ int main(int argc, char* args[])
 			Entity a = loadEntity("Entity/cube.obj");
 			DisplayList list;
 			list.insert(a);
+			list = scale(x, list);
 			while (!quit)
 			{
 				while (SDL_PollEvent(&e) != 0) {
@@ -175,28 +176,33 @@ int main(int argc, char* args[])
 					case SDLK_UP:
 						printf("up arrow pressed!\n");
 						//loadMedia("upArrow.bmp");
-						py--;
+						list = rotateObjects(list, .33, X);
+						//py--;
 						break;
 					case SDLK_DOWN:
 						printf("down arrow pressed!\n");
 						//loadMedia("downArrow.bmp");
-						py++;
+						list = rotateObjects(list, -.33, X);
+						//py++;
 						break;
 					case SDLK_LEFT:
 						printf("left arrow pressed!\n");
 						//loadMedia("leftArrow.bmp");
-						px--;
+						list = rotateObjects(list, .33, Y);
+						//px--;
 						break;
 					case SDLK_RIGHT:
 						printf("right arrow pressed!\n");
 						//loadMedia("rightArrow.bmp");
-						px++;
+						list = rotateObjects(list, -0.33, Y);
+						//px++;
 						break;
 					default:
 						printf("%s", e.key.keysym);
 						//loadMedia("hello.bmp");
-						x += .5;
-						list = scale(x, list);
+						//float gx = 1;
+
+						
 						break;
 					}
 
@@ -234,7 +240,7 @@ int main(int argc, char* args[])
 					//Update screen
 					renderWireframe(gRenderer, list);
 					SDL_RenderPresent(gRenderer);
-					SDL_Delay(333);
+					SDL_Delay(33);
 				}
 			}
 		}

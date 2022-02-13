@@ -2,6 +2,39 @@
 
 float indentity[DIMENSION][DIMENSION] = { {1, 0, 0, 0},{0, 1, 0, 0},{0, 0, 1, 0},{0, 0, 0, 1} };
 
+
+Matrix rotateZ(float a[DIMENSION][DIMENSION], float angle) {
+	float c = cos(angle);//avoid recalculation
+	float s = sin(angle);
+	float rotationMatrixZ[DIMENSION][DIMENSION] =
+	{	{c, -s,0, 0},
+		{s, c, 0, 0},
+		{0, 0, 1, 0},
+		{0, 0, 0, 1} };
+	return multiplyMatrix(a, rotationMatrixZ);
+}
+
+Matrix rotateX(float a[DIMENSION][DIMENSION], float angle) {
+	float c = cos(angle);//avoid recalculation
+	float s = sin(angle);
+	float rotationMatrixX[DIMENSION][DIMENSION] =
+	{	{1, 0, 0, 0},
+		{0, c, -s,0},
+		{0, s, c, 0},
+		{0, 0, 0, 1} };
+	return multiplyMatrix(a, rotationMatrixX);
+}
+Matrix rotateY(float a[DIMENSION][DIMENSION], float angle) {
+	float c = cos(angle);//avoid recalculation
+	float s = sin(angle);
+	float rotationMatrixY[DIMENSION][DIMENSION] =
+	{	{c, 0, s, 0},
+		{0, 1, 0,0},
+		{-s,0, c, 0},
+		{0, 0, 0, 1} };
+	return multiplyMatrix(a, rotationMatrixY);
+}
+
 Matrix multiplyMatrix(float a[DIMENSION][DIMENSION], float b[DIMENSION][DIMENSION]) {
 	//multiply the lines of the first matrix with de collunms of the second
 	int i, j, k;
@@ -23,9 +56,13 @@ Matrix multiplyMatrix(float a[DIMENSION][DIMENSION], float b[DIMENSION][DIMENSIO
 }
 
 Matrix scaleMatrix(float a[DIMENSION][DIMENSION], float value) {
-	float aux[DIMENSION][DIMENSION] = { {value, 0, 0, 0},{0, value, 0, 0},{0, 0, value, 0},{0, 0, 0, value} };
-	Matrix r = multiplyMatrix(a, aux);
-	return r;
+	float aux[DIMENSION][DIMENSION] = 
+	{	{value, 0, 0, 0},
+		{0, value, 0, 0},
+		{0, 0, value, 0},
+		{0, 0, 0, value}
+	};
+	return multiplyMatrix(a, aux);
 }
 
 Matrix addMatrix(float a[DIMENSION][DIMENSION], float b[DIMENSION][DIMENSION]) {

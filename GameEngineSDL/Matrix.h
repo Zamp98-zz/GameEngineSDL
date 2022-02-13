@@ -1,7 +1,7 @@
 #pragma once
 #include <stdlib.h>
 #include <stdio.h>
-
+#include <math.h>
 #define DIMENSION 4
 
 class Matrix {
@@ -26,3 +26,7 @@ public:
 Matrix scaleMatrix(float a[DIMENSION][DIMENSION], float value);
 Matrix addMatrix(float a[DIMENSION][DIMENSION], float b[DIMENSION][DIMENSION]);
 Matrix multiplyMatrix(float a[DIMENSION][DIMENSION], float b[DIMENSION][DIMENSION]);
+
+Matrix rotateX(float a[DIMENSION][DIMENSION], float angle);
+Matrix rotateY(float a[DIMENSION][DIMENSION], float angle);
+Matrix rotateZ(float a[DIMENSION][DIMENSION], float angle);

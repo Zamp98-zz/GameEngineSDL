@@ -5,6 +5,10 @@
 #include "ObjLoader.h"
 #include <SDL.h>
 #include "Matrix.h"
+#define X -1
+#define Y 0
+#define Z 1
+
 
 using namespace std;
 
@@ -66,3 +70,4 @@ class DisplayList {
 DisplayList scale(float s, DisplayList l);
 SDL_Renderer * renderWireframe(SDL_Renderer* gRenderer, DisplayList l);
 DisplayList applyPerspective(DisplayList l, Perspective p);
+DisplayList rotateObjects(DisplayList l, float angle, int axis);  
