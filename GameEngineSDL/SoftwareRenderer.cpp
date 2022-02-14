@@ -153,29 +153,31 @@ DisplayList applyPerspective(DisplayList l, Perspective p) {
 DisplayList translate(DisplayList l, int axis, float delta) {
 	int t = l.objects.size();
 	int i;
+	delta = delta / 100;
 	for (i = 0; i < t; i++) {
 		int u = l.objects[i].Vertices.size();
 		int j;
 		for (j = 0; j < u; j++) {
 			Matrix temp;
 			temp.init();
+			//column vector
 			temp.values[0][0] = l.objects[i].Vertices[j].x;
-			temp.values[0][1] = l.objects[i].Vertices[j].y;
-			temp.values[0][2] = l.objects[i].Vertices[j].z;
-			temp.values[0][3] = l.objects[i].Vertices[j].w;
+			temp.values[1][0] = l.objects[i].Vertices[j].y;
+			temp.values[2][0] = l.objects[i].Vertices[j].z;
+			temp.values[3][0] = l.objects[i].Vertices[j].w;
 			if (axis == X) {
 				temp = translateX(temp.values, delta);
 			}
 			else if (axis == Y) {
 				temp = translateY(temp.values, delta);
 			}
-			else {
+			else if(axis == Z){
 				temp = translateZ(temp.values, delta);
 			}
 			l.objects[i].Vertices[j].x = temp.values[0][0];
-			l.objects[i].Vertices[j].y = temp.values[0][1];
-			l.objects[i].Vertices[j].z = temp.values[0][2];
-			l.objects[i].Vertices[j].w = temp.values[0][3];
+			l.objects[i].Vertices[j].y = temp.values[1][0];
+			l.objects[i].Vertices[j].z = temp.values[2][0];
+			l.objects[i].Vertices[j].w = temp.values[3][0];
 		}
 	}
 	return l;

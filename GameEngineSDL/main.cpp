@@ -202,19 +202,29 @@ int main(int argc, char* args[])
 						//px++;
 						break;
 					case SDLK_a:
-						list = translate(list, X, 10);
+						printf("a\n");
+						list = translate(list, X, -1);
+						break;
 					case SDLK_s:
-						list = translate(list, Y, -10);
+						printf("s\n");
+						list = translate(list, Y, 1);
+						break;
 					case SDLK_d:
-						list = translate(list, X, -10);
+						printf("d\n");
+						list = translate(list, X, 1);
+						break;
 					case SDLK_w:
-						list = translate(list, Y, 10);
-					/*case SDLK_x:
-						printf("a");
-						//list = scale(1.3, list);
+						printf("w\n");
+						list = translate(list, Y, -1);
+						break;
+					case SDLK_x:
+						printf("a\n");
+						list = scale(1.3, list);
+						break;
 					case SDLK_z:
-						printf("z");
-						//list = scale(0.9, list);*/
+						printf("z\n");
+						list = scale(0.9, list);
+						break;
 					default:
 						//printf("%s", e.key.keysym);
 						//loadMedia("hello.bmp");

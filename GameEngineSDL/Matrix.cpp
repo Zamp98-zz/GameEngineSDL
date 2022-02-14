@@ -36,37 +36,33 @@ Matrix rotateY(float a[DIMENSION][DIMENSION], float angle) {
 }
 
 Matrix translateX(float a[DIMENSION][DIMENSION], float d) {
-	Matrix r;
-	r.init();
+	float y = a[0][1];
 	float translationMatrixX[DIMENSION][DIMENSION] =
 	{	{1, 0, 0, d},
 		{0, 1, 0, 0},
 		{0, 0, 1, 0},
 		{0, 0, 0, 1} 
 	};
-	return multiplyMatrix(a, translationMatrixX);
+	return multiplyMatrix(translationMatrixX, a);
 }
 Matrix translateY(float a[DIMENSION][DIMENSION], float d) {
-	Matrix r;
-	r.init();
+	
 	float translationMatrixY[DIMENSION][DIMENSION] =
 	{	{1, 0, 0, 0},
 		{0, 1, 0, d},
 		{0, 0, 1, 0},
 		{0, 0, 0, 1} 
 	};
-	return multiplyMatrix(a, translationMatrixY);
+	return multiplyMatrix(translationMatrixY, a);
 }
 Matrix translateZ(float a[DIMENSION][DIMENSION], float d) {
-	Matrix r;
-	r.init();
 	float translationMatrixZ[DIMENSION][DIMENSION] =
 	{	{1, 0, 0, 0},
 		{0, 1, 0, 0},
 		{0, 0, 1, d},
 		{0, 0, 0, 1} 
 	};
-	return multiplyMatrix(a, translationMatrixZ);
+	return multiplyMatrix(translationMatrixZ, a);
 }
 
 Matrix multiplyMatrix(float a[DIMENSION][DIMENSION], float b[DIMENSION][DIMENSION]) {
