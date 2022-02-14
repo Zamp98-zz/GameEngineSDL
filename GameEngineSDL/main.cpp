@@ -161,11 +161,13 @@ int main(int argc, char* args[])
 			SDL_Event e;
 
 			//While application is running
-			//Entity cube = loadEntity("Entity/cube.obj");
-			Entity map = loadEntity("Entity/MAPHOUSE.obj");
+			Entity cube = loadEntity("Entity/cube.obj");
+			//Entity map = loadEntity("Entity/MAPHOUSE.obj");
+			Entity car = loadEntity("Entity/car.obj");
 			DisplayList list;
-			//list.insert(cube);
-			list.insert(map);
+			list.insert(cube);
+			list.insert(car);
+			//list.insert(map);
 			list = scale(x, list);
 			while (!quit)
 			{
