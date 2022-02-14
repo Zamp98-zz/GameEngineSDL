@@ -40,7 +40,7 @@ Entity loadEntity(std::string path)
 			if (prefix == "v") {
 				Vertex v;
 				//printf("This is a vertex\n");
-				
+				v.w = 1;
 				ss >> v.x >> v.y >> v.z;
 				//printf("%f, %f, %f\n", v.x, v.y, v.z);
 				obj.vertexAmount++;

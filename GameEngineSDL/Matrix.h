@@ -30,3 +30,7 @@ Matrix multiplyMatrix(float a[DIMENSION][DIMENSION], float b[DIMENSION][DIMENSIO
 Matrix rotateX(float a[DIMENSION][DIMENSION], float angle);
 Matrix rotateY(float a[DIMENSION][DIMENSION], float angle);
 Matrix rotateZ(float a[DIMENSION][DIMENSION], float angle);
+
+Matrix translateX(float a[DIMENSION][DIMENSION], float delta);
+Matrix translateY(float a[DIMENSION][DIMENSION], float delta);
+Matrix translateZ(float a[DIMENSION][DIMENSION], float delta);

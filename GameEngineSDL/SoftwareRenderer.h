@@ -40,9 +40,41 @@ class Object {
 		}
 };
 
+class Resolution {
+	public:
+		int width;
+		int height;
+		Resolution(int w, int h) {
+			width = w;
+			height = h;
+		}
+};
+
 class Perspective: public Position {
 	public:
-		float matrix[4][4];
+		float matrix[DIMENSION][DIMENSION];
+		bool isSet;
+		Perspective() {
+			int i;
+			int j;
+			for (i = 0; i < DIMENSION; i++)
+				for (j = 0; j < DIMENSION; j++)
+					matrix[i][j] = 0;
+			isSet = false;
+		}
+
+		void setProjectionMatrix(const float& angleOfView, const float& near, const float& far)
+		{
+			// set the basic projection matrix
+			float scale = 1 / tan(angleOfView * 0.5 * M_PI / 180);
+			matrix[0][0] = scale; // scale the x coordinates of the projected point 
+			matrix[1][1] = scale; // scale the y coordinates of the projected point 
+			matrix[2][2] = -far / (far - near); // used to remap z to [0,1] 
+			matrix[3][2] = -far * near / (far - near); // used to remap z [0,1] 
+			matrix[2][3] = -1; // set w = -z 
+			matrix[3][3] = 0;
+			isSet = true;
+		}
 };
 
 class Camera: public Object{
@@ -71,3 +103,4 @@ DisplayList scale(float s, DisplayList l);
 SDL_Renderer * renderWireframe(SDL_Renderer* gRenderer, DisplayList l);
 DisplayList applyPerspective(DisplayList l, Perspective p);
 DisplayList rotateObjects(DisplayList l, float angle, int axis);  
+DisplayList translate(DisplayList l, int axis, float delta);

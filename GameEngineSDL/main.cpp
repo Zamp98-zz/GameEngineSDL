@@ -161,9 +161,11 @@ int main(int argc, char* args[])
 			SDL_Event e;
 
 			//While application is running
-			Entity a = loadEntity("Entity/cube.obj");
+			//Entity cube = loadEntity("Entity/cube.obj");
+			Entity map = loadEntity("Entity/MAPHOUSE.obj");
 			DisplayList list;
-			list.insert(a);
+			//list.insert(cube);
+			list.insert(map);
 			list = scale(x, list);
 			while (!quit)
 			{
@@ -174,35 +176,47 @@ int main(int argc, char* args[])
 					}
 					switch (e.key.keysym.sym) {
 					case SDLK_UP:
-						printf("up arrow pressed!\n");
+						//printf("up arrow pressed!\n");
 						//loadMedia("upArrow.bmp");
 						list = rotateObjects(list, .33, X);
 						//py--;
 						break;
 					case SDLK_DOWN:
-						printf("down arrow pressed!\n");
+						//printf("down arrow pressed!\n");
 						//loadMedia("downArrow.bmp");
 						list = rotateObjects(list, -.33, X);
 						//py++;
 						break;
 					case SDLK_LEFT:
-						printf("left arrow pressed!\n");
+						//printf("left arrow pressed!\n");
 						//loadMedia("leftArrow.bmp");
 						list = rotateObjects(list, .33, Y);
 						//px--;
 						break;
 					case SDLK_RIGHT:
-						printf("right arrow pressed!\n");
+						//printf("right arrow pressed!\n");
 						//loadMedia("rightArrow.bmp");
 						list = rotateObjects(list, -0.33, Y);
 						//px++;
 						break;
+					case SDLK_a:
+						list = translate(list, X, 10);
+					case SDLK_s:
+						list = translate(list, Y, -10);
+					case SDLK_d:
+						list = translate(list, X, -10);
+					case SDLK_w:
+						list = translate(list, Y, 10);
+					/*case SDLK_x:
+						printf("a");
+						//list = scale(1.3, list);
+					case SDLK_z:
+						printf("z");
+						//list = scale(0.9, list);*/
 					default:
-						printf("%s", e.key.keysym);
+						//printf("%s", e.key.keysym);
 						//loadMedia("hello.bmp");
 						//float gx = 1;
-
-						
 						break;
 					}
 

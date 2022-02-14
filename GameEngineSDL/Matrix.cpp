@@ -35,12 +35,47 @@ Matrix rotateY(float a[DIMENSION][DIMENSION], float angle) {
 	return multiplyMatrix(a, rotationMatrixY);
 }
 
+Matrix translateX(float a[DIMENSION][DIMENSION], float d) {
+	Matrix r;
+	r.init();
+	float translationMatrixX[DIMENSION][DIMENSION] =
+	{	{1, 0, 0, d},
+		{0, 1, 0, 0},
+		{0, 0, 1, 0},
+		{0, 0, 0, 1} 
+	};
+	return multiplyMatrix(a, translationMatrixX);
+}
+Matrix translateY(float a[DIMENSION][DIMENSION], float d) {
+	Matrix r;
+	r.init();
+	float translationMatrixY[DIMENSION][DIMENSION] =
+	{	{1, 0, 0, 0},
+		{0, 1, 0, d},
+		{0, 0, 1, 0},
+		{0, 0, 0, 1} 
+	};
+	return multiplyMatrix(a, translationMatrixY);
+}
+Matrix translateZ(float a[DIMENSION][DIMENSION], float d) {
+	Matrix r;
+	r.init();
+	float translationMatrixZ[DIMENSION][DIMENSION] =
+	{	{1, 0, 0, 0},
+		{0, 1, 0, 0},
+		{0, 0, 1, d},
+		{0, 0, 0, 1} 
+	};
+	return multiplyMatrix(a, translationMatrixZ);
+}
+
 Matrix multiplyMatrix(float a[DIMENSION][DIMENSION], float b[DIMENSION][DIMENSION]) {
 	//multiply the lines of the first matrix with de collunms of the second
 	int i, j, k;
 	int r, c;
 	c = r = 4;
 	Matrix ret;
+	ret.init();
 	for (i = 0; i < r; i++)
 	{
 		for (j = 0; j < c; j++)

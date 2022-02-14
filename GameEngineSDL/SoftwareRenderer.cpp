@@ -1,9 +1,10 @@
 #include "SoftwareRenderer.h"
 #include <math.h>
 
+Perspective p;
 
 float M[4][4];
-
+/*
 void setProjectionMatrix(const float& angleOfView, const float& near, const float& far)
 {
 	// set the basic projection matrix
@@ -14,17 +15,19 @@ void setProjectionMatrix(const float& angleOfView, const float& near, const floa
 	M[3][2] = -far * near / (far - near); // used to remap z [0,1] 
 	M[2][3] = -1; // set w = -z 
 	M[3][3] = 0;
-}
+}*/
+
+
 
 DisplayList scale(float s, DisplayList l) {
 	int t = l.objects.size();
 	int i;
 	for (i = 0; i < t; i++) {
-		int t = l.objects[i].Vertices.size();
+		int u = l.objects[i].Vertices.size();
 		int j;
-		for (j = 0; j < t; j++) {
+		for (j = 0; j < u; j++) {
 			Matrix temp;
-			//temp.init();
+			temp.init();
 			temp.values[0][0] = l.objects[i].Vertices[j].x;
 			temp.values[0][1] = l.objects[i].Vertices[j].y;
 			temp.values[0][2] = l.objects[i].Vertices[j].z;
@@ -43,11 +46,11 @@ DisplayList rotateObjects(DisplayList l, float angle, int axis) {
 	int t = l.objects.size();
 	int i;
 	for (i = 0; i < t; i++) {
-		int t = l.objects[i].Vertices.size();
+		int u = l.objects[i].Vertices.size();
 		int j;
-		for (j = 0; j < t; j++) {
+		for (j = 0; j < u; j++) {
 			Matrix temp;
-			//temp.init();
+			temp.init();
 			temp.values[0][0] = l.objects[i].Vertices[j].x;
 			temp.values[0][1] = l.objects[i].Vertices[j].y;
 			temp.values[0][2] = l.objects[i].Vertices[j].z;
@@ -74,6 +77,9 @@ SDL_Renderer* renderWireframe(SDL_Renderer* gRenderer, DisplayList l) {
 	//TODO
 	int t = l.objects.size();
 	int i;
+	Perspective p;
+	p.setProjectionMatrix(90, 0.01, 1000);
+	l = applyPerspective(l, p);
 	for (i = 0; i < t; i++) {
 		int u = l.objects[i].faceAmount;
 		int j;
@@ -104,9 +110,15 @@ SDL_Renderer* renderWireframe(SDL_Renderer* gRenderer, DisplayList l) {
 	}
 }
 
+DisplayList center(DisplayList l, Resolution r) {
+	float tX = r.width / 2;
+	float tY = r.height / 2;
+	//translate
+	return l;
+}
+
 DisplayList applyPerspective(DisplayList l, Perspective p) {
-	int i;
-	for (i = 0; i < l.objects.size(); i++) {
+	/*for (i = 0; i < l.objects.size(); i++) {
 		int j;
 		for (j = 0; j < l.objects[i].Vertices.size(); j++) {
 			Position original;
@@ -115,6 +127,55 @@ DisplayList applyPerspective(DisplayList l, Perspective p) {
 			original.z = l.objects[i].Vertices[j].z;
 			l.objects[i].Vertices[j].x = original.x * p.z / (p.z + original.z);
 			l.objects[i].Vertices[j].y = original.y * p.z / (p.z + original.z);
+		}
+	}*/
+	int t = l.objects.size();
+	int i;
+	for (i = 0; i < t; i++) {
+		int u = l.objects[i].Vertices.size();
+		int j;
+		for (j = 0; j < u; j++) {
+			Matrix temp;
+			//temp.init();
+			temp.values[0][0] = l.objects[i].Vertices[j].x;
+			temp.values[0][1] = l.objects[i].Vertices[j].y;
+			temp.values[0][2] = l.objects[i].Vertices[j].z;
+			temp.values[0][3] = l.objects[i].Vertices[j].w;
+			temp = multiplyMatrix(temp.values, p.matrix);
+			l.objects[i].Vertices[j].x = temp.values[0][0];
+			l.objects[i].Vertices[j].y = temp.values[0][1];
+			l.objects[i].Vertices[j].z = temp.values[0][2];
+			l.objects[i].Vertices[j].w = temp.values[0][3];
+		}
+	}
+	return l;
+}
+DisplayList translate(DisplayList l, int axis, float delta) {
+	int t = l.objects.size();
+	int i;
+	for (i = 0; i < t; i++) {
+		int u = l.objects[i].Vertices.size();
+		int j;
+		for (j = 0; j < u; j++) {
+			Matrix temp;
+			temp.init();
+			temp.values[0][0] = l.objects[i].Vertices[j].x;
+			temp.values[0][1] = l.objects[i].Vertices[j].y;
+			temp.values[0][2] = l.objects[i].Vertices[j].z;
+			temp.values[0][3] = l.objects[i].Vertices[j].w;
+			if (axis == X) {
+				temp = translateX(temp.values, delta);
+			}
+			else if (axis == Y) {
+				temp = translateY(temp.values, delta);
+			}
+			else {
+				temp = translateZ(temp.values, delta);
+			}
+			l.objects[i].Vertices[j].x = temp.values[0][0];
+			l.objects[i].Vertices[j].y = temp.values[0][1];
+			l.objects[i].Vertices[j].z = temp.values[0][2];
+			l.objects[i].Vertices[j].w = temp.values[0][3];
 		}
 	}
 	return l;
