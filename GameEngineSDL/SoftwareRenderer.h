@@ -30,6 +30,7 @@ class Object {
 		Entity body;
 		float mass;
 		Speed speed;
+		Entity shape;
 		void rotate(float degX, float degY, float degZ) {
 		}
 		void translate(float x, float y, float z) {
