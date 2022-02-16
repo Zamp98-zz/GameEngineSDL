@@ -171,6 +171,9 @@ int main(int argc, char* args[])
 			list.insert(cube);
 			//list.insert(map);
 			list = scale(s, list);
+			Camera c;
+			c.pos.y = SCREEN_HEIGHT / 2;
+			c.pos.x = SCREEN_WIDTH / 2;
 			while (!quit)
 			{
 				while (SDL_PollEvent(&e) != 0) {
@@ -180,41 +183,50 @@ int main(int argc, char* args[])
 					}
 					switch (e.key.keysym.sym) {
 					case SDLK_UP:
-						list = rotateObjects(list, .33, X);
+						//list = rotateObjects(list, .33, X);
+						c.rotateX(0.33);
 						break;
 					case SDLK_DOWN:
-						list = rotateObjects(list, -.33, X);
+						//list = rotateObjects(list, -.33, X);
+						c.rotateX(-0.33);
 						break;
 					case SDLK_LEFT:
-						list = rotateObjects(list, .33, Y);
+						//list = rotateObjects(list, .33, Y);
+						c.rotateY(0.33);
 						break;
 					case SDLK_RIGHT:
-						
-						list = rotateObjects(list, -0.33, Y);
+						c.rotateY(-0.33);
+						//list = rotateObjects(list, -0.33, Y);
 						break;
 					case SDLK_a:
 						printf("a\n");
-						list = translate(list, X, -1000);
+						//list = translate(list, X, -1000);
+						c.translateX(-100);
 						break;
 					case SDLK_s:
 						printf("s\n");
-						list = translate(list, Y, 1000);
+						//list = translate(list, Y, 1000);
+						c.translateY(100);
 						break;
 					case SDLK_d:
 						printf("d\n");
-						list = translate(list, X, 1000);
+						//list = translate(list, X, 1000);
+						c.translateX(100);
 						break;
 					case SDLK_w:
 						printf("w\n");
-						list = translate(list, Y, -1000);
+						//list = translate(list, Y, -1000);
+						c.translateY(-100);
 						break;
 					case SDLK_q:
 						printf("q\n");
-						list = translate(list, Z, 1000);
+						//list = translate(list, Z, 1000);
+						c.translateZ(100);
 						break;
 					case SDLK_e:
 						printf("e\n");
-						list = translate(list, Z, 1000);
+						//list = translate(list, Z, 1000);
+						c.translateZ(100);
 						break;
 					case SDLK_x:
 						printf("x\n");
@@ -227,14 +239,20 @@ int main(int argc, char* args[])
 					default:
 						break;
 					}
-
+					
+					printf("Camera parameters: angle (x, y, z): %f %f %f\n pos (x, y, z): %f %f %f\n",
+						c.angle.x, c.angle.y, c.angle.z, c.pos.x, c.pos.y, c.pos.z);
 					//Clear screen
 					//Update screen
-					render(gRenderer, list);
+					DisplayList temp = list;
+					temp = applyDelta(c, list);
+					//c.resetAngle();
+					//render(gRenderer, temp);
+					renderWireframe(gRenderer, temp);
 					SDL_RenderPresent(gRenderer);
 					SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0xFF);
 					SDL_RenderClear(gRenderer);
-					SDL_Delay(16);
+					SDL_Delay(33);
 					
 				}
 			}

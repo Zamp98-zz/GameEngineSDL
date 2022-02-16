@@ -83,10 +83,46 @@ class Perspective: public Position {
 		}
 };
 
-class Camera: public Object{
+typedef struct angle{
+	float x;
+	float y;
+	float z;
+}Angle;
+
+class Camera{
 	public:
 		int fov;
 		Perspective perspective;
+		Position pos;
+		Angle angle;
+		Camera() {
+			fov = 90.0;
+			perspective.setProjectionMatrix(fov, 0.1, 100);
+			pos.x = pos.y = pos.z = 0.0;
+			angle.x = angle.z = angle.y = 0.0;
+		}
+		void resetAngle() {
+			//pos.x = pos.y = pos.z = 0.0;
+			angle.x = angle.z = angle.y = 0.0;
+		}
+		void translateX(float s) {
+			pos.x += s;
+		}
+		void translateY(float s) {
+			pos.y += s;
+		}
+		void translateZ(float s) {
+			pos.z += s;
+		}
+		void rotateX(float s) {
+			angle.x += s;
+		}
+		void rotateY(float s) {
+			angle.y += s;
+		}
+		void rotateZ(float s) {
+			angle.z += s;
+		}
 };
 
 class DisplayList {
@@ -104,7 +140,7 @@ class DisplayList {
 	
 };
 
-
+DisplayList applyDelta(Camera c, DisplayList l);
 DisplayList scale(float s, DisplayList l);
 void renderWireframe(SDL_Renderer* gRenderer, DisplayList l);
 void render(SDL_Renderer* gRenderer, DisplayList l);

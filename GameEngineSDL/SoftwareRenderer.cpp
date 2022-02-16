@@ -88,6 +88,7 @@ void render(SDL_Renderer* gRenderer, DisplayList l) {
 		p.setProjectionMatrix(90, 0.1, 100);
 	l = applyPerspective(l, p);
 	l = scale(originalScale, l);
+
 	for (i = 0; i < t; i++) {
 		int u = l.objects[i].faceAmount;
 		int j;
@@ -136,7 +137,7 @@ void renderWireframe(SDL_Renderer* gRenderer, DisplayList l) {
 	Perspective p;
 	if(!p.isSet)
 		p.setProjectionMatrix(90, 0.1, 100);
-	l = applyPerspective(l, p);
+	//l = applyPerspective(l, p);
 	for (i = 0; i < t; i++) {
 		int u = l.objects[i].faceAmount;
 		int j;
@@ -260,6 +261,42 @@ DisplayList translate(DisplayList l, int axis, float delta) {
 			l.objects[i].Vertices[j].y = temp.values[1][0];
 			l.objects[i].Vertices[j].z = temp.values[2][0];
 			l.objects[i].Vertices[j].w = temp.values[3][0];
+		}
+	}
+	return l;
+}
+//apply position ant rotation delta for the camera
+DisplayList applyDelta(Camera c, DisplayList l) {
+	int t = l.objects.size();
+	int i;
+	Position delta;
+	for (i = 0; i < t; i++) {
+		int u = l.objects[i].Vertices.size();
+		int j;
+		for (j = 0; j < u; j++) {
+			delta.x = (c.pos.x - l.objects[i].Vertices[j].x);
+			delta.y = (c.pos.y - l.objects[i].Vertices[j].y);
+			delta.z = (c.pos.z - l.objects[i].Vertices[j].z);
+			if (c.angle.x != 0) {
+				l = rotateObjects(l, X, c.angle.x);
+			}
+			if (c.angle.y != 0) {
+				l = rotateObjects(l, Y, c.angle.y);
+			}
+			if (c.angle.z != 0) {
+				l = rotateObjects(l, Z, c.angle.z);
+			}
+			c.angle.x = c.angle.y = c.angle.z = 0;
+			//translate according with the delta
+			if (delta.x != 0) {
+				l = translate(l, X, delta.x);
+			}
+			if (delta.y != 0) {
+				l = translate(l, Y, delta.y);
+			}
+			if (delta.z == 0) {
+				l = translate(l, Z, delta.z);
+			}
 		}
 	}
 	return l;
