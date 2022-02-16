@@ -91,7 +91,7 @@ Matrix scaleMatrix(float a[DIMENSION][DIMENSION], float value) {
 	{	{value, 0, 0, 0},
 		{0, value, 0, 0},
 		{0, 0, value, 0},
-		{0, 0, 0, value}
+		{0, 0, 0, 1}
 	};
 	return multiplyMatrix(a, aux);
 }

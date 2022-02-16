@@ -8,7 +8,8 @@
 #define X -1
 #define Y 0
 #define Z 1
-
+const int SCREEN_WIDTH = 1024;
+const int SCREEN_HEIGHT = 600;
 
 using namespace std;
 
@@ -30,7 +31,11 @@ class Object {
 		Entity body;
 		float mass;
 		Speed speed;
+		float sc;
 		Entity shape;
+		Object(Entity e) {
+			shape = e;
+		}
 		void rotate(float degX, float degY, float degZ) {
 		}
 		void translate(float x, float y, float z) {
@@ -101,7 +106,8 @@ class DisplayList {
 
 
 DisplayList scale(float s, DisplayList l);
-SDL_Renderer * renderWireframe(SDL_Renderer* gRenderer, DisplayList l);
+void renderWireframe(SDL_Renderer* gRenderer, DisplayList l);
+void render(SDL_Renderer* gRenderer, DisplayList l);
 DisplayList applyPerspective(DisplayList l, Perspective p);
 DisplayList rotateObjects(DisplayList l, float angle, int axis);  
 DisplayList translate(DisplayList l, int axis, float delta);

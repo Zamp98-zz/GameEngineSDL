@@ -39,34 +39,34 @@ Entity loadEntity(std::string path)
 			ss >> prefix;
 			if (prefix == "v") {
 				Vertex v;
-				//printf("This is a vertex\n");
+				
 				v.w = 1;
 				ss >> v.x >> v.y >> v.z;
-				//printf("%f, %f, %f\n", v.x, v.y, v.z);
+				
 				obj.vertexAmount++;
 				obj.Vertices.push_back(v);
 			}
 			else if (prefix == "vt") {
-				//printf("This is a texture\n");
+				
 				Texture t;
 				ss >> t.u >> t.v;
 				obj.Textures.push_back(t);
 				obj.textureAmount++;
 			}
 			else if (prefix == "vn") {
-				//printf("This is a vertex normal\n");
+				
 				Normal n;
 				ss >> n.x >> n.y >> n.z;
 				obj.Normals.push_back(n);
 			}
 			else if (prefix == "usemtl") {
-				//todo
+				//TODO when i'll implement textures
 			}
 			else if (prefix == "s") {
-				//printf("This is a s\n");
+				//TODO
 			}
 			else if (prefix == "f") {
-				//std::printf("This is a face\n");
+				
 				Face f;
 				f.capacity = 0;
 				std::vector<std::string> aux = split(line, ' ');

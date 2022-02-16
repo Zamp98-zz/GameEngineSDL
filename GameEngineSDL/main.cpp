@@ -10,9 +10,9 @@ and may not be redistributed without written permission.*/
 #include "ObjLoader.h"
 #include "SoftwareRenderer.h"
 
+
 //Screen dimension constants
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+
 
 //Starts up SDL and creates window
 bool init();
@@ -52,7 +52,7 @@ bool init()
 		}
 
 		//Create window
-		gWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+		gWindow = SDL_CreateWindow("3D Engine", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 		if (gWindow == NULL)
 		{
 			printf("Window could not be created! SDL Error: %s\n", SDL_GetError());
@@ -140,7 +140,8 @@ int main(int argc, char* args[])
 	//Start up SDL and create window
 	int px = 0;
 	int py = 0;
-	float x = 100.0;
+	float s = 100.0;
+	
 	if (!init())
 	{
 		printf("Failed to initialize!\n");
@@ -162,13 +163,14 @@ int main(int argc, char* args[])
 
 			//While application is running
 			Entity cube = loadEntity("Entity/cube.obj");
+			Entity sphere = loadEntity("Entity/sphere.obj");
 			//Entity map = loadEntity("Entity/MAPHOUSE.obj");
-			Entity car = loadEntity("Entity/car.obj");
+			//Entity car = loadEntity("Entity/car.obj");
 			DisplayList list;
+			//list.insert(sphere);
 			list.insert(cube);
-			list.insert(car);
 			//list.insert(map);
-			list = scale(x, list);
+			list = scale(s, list);
 			while (!quit)
 			{
 				while (SDL_PollEvent(&e) != 0) {
@@ -178,47 +180,44 @@ int main(int argc, char* args[])
 					}
 					switch (e.key.keysym.sym) {
 					case SDLK_UP:
-						//printf("up arrow pressed!\n");
-						//loadMedia("upArrow.bmp");
 						list = rotateObjects(list, .33, X);
-						//py--;
 						break;
 					case SDLK_DOWN:
-						//printf("down arrow pressed!\n");
-						//loadMedia("downArrow.bmp");
 						list = rotateObjects(list, -.33, X);
-						//py++;
 						break;
 					case SDLK_LEFT:
-						//printf("left arrow pressed!\n");
-						//loadMedia("leftArrow.bmp");
 						list = rotateObjects(list, .33, Y);
-						//px--;
 						break;
 					case SDLK_RIGHT:
-						//printf("right arrow pressed!\n");
-						//loadMedia("rightArrow.bmp");
+						
 						list = rotateObjects(list, -0.33, Y);
-						//px++;
 						break;
 					case SDLK_a:
 						printf("a\n");
-						list = translate(list, X, -1);
+						list = translate(list, X, -1000);
 						break;
 					case SDLK_s:
 						printf("s\n");
-						list = translate(list, Y, 1);
+						list = translate(list, Y, 1000);
 						break;
 					case SDLK_d:
 						printf("d\n");
-						list = translate(list, X, 1);
+						list = translate(list, X, 1000);
 						break;
 					case SDLK_w:
 						printf("w\n");
-						list = translate(list, Y, -1);
+						list = translate(list, Y, -1000);
+						break;
+					case SDLK_q:
+						printf("q\n");
+						list = translate(list, Z, 1000);
+						break;
+					case SDLK_e:
+						printf("e\n");
+						list = translate(list, Z, 1000);
 						break;
 					case SDLK_x:
-						printf("a\n");
+						printf("x\n");
 						list = scale(1.3, list);
 						break;
 					case SDLK_z:
@@ -226,54 +225,22 @@ int main(int argc, char* args[])
 						list = scale(0.9, list);
 						break;
 					default:
-						//printf("%s", e.key.keysym);
-						//loadMedia("hello.bmp");
-						//float gx = 1;
 						break;
 					}
 
 					//Clear screen
+					//Update screen
+					render(gRenderer, list);
+					SDL_RenderPresent(gRenderer);
 					SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0xFF);
 					SDL_RenderClear(gRenderer);
-
-					//Render red filled quad
-					/*SDL_Rect fillRect;// = { SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 };
-					fillRect.h = 20;
-					fillRect.w = 20;
-					fillRect.x = px;
-					fillRect.y = py;
+					SDL_Delay(16);
 					
-					SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
-					SDL_RenderFillRect(gRenderer, &fillRect);
-					*/
-					//Render green outlined quad
-					
-					/*SDL_Rect outlineRect = {SCREEN_WIDTH / 6, SCREEN_HEIGHT / 6, SCREEN_WIDTH * 2 / 3, SCREEN_HEIGHT * 2 / 3};
-					SDL_SetRenderDrawColor(gRenderer, 0x00, 0xFF, 0x00, 0xFF);
-					SDL_RenderDrawRect(gRenderer, &outlineRect);
-
-					//Draw blue horizontal line
-					SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0xFF, 0xFF);
-					SDL_RenderDrawLine(gRenderer, 0, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT / 2);
-
-					//Draw vertical line of yellow dots
-					SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0x00, 0xFF);
-					for (int i = 0; i < SCREEN_HEIGHT; i += 4)
-					{
-						SDL_RenderDrawPoint(gRenderer, SCREEN_WIDTH / 2, i);
-					}
-					*/
-					//Update screen
-					renderWireframe(gRenderer, list);
-					SDL_RenderPresent(gRenderer);
-					SDL_Delay(33);
 				}
 			}
 		}
-
 		//Free resources and close SDL
 		close();
-
 		return 0;
 	}
 }
