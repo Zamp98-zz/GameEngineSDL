@@ -165,15 +165,17 @@ int main(int argc, char* args[])
 			Entity cube = loadEntity("Entity/cube.obj");
 			Entity sphere = loadEntity("Entity/sphere.obj");
 			//Entity map = loadEntity("Entity/MAPHOUSE.obj");
-			//Entity car = loadEntity("Entity/car.obj");
+			Entity c2 = loadEntity("Entity/c2.obj");
 			DisplayList list;
 			//list.insert(sphere);
 			list.insert(cube);
 			//list.insert(map);
 			list = scale(s, list);
 			Camera c;
+			c.fov = 90;
 			c.pos.y = SCREEN_HEIGHT / 2;
 			c.pos.x = SCREEN_WIDTH / 2;
+			c.pos.z = 500.0;
 			while (!quit)
 			{
 				while (SDL_PollEvent(&e) != 0) {
@@ -183,49 +185,49 @@ int main(int argc, char* args[])
 					}
 					switch (e.key.keysym.sym) {
 					case SDLK_UP:
-						//list = rotateObjects(list, .33, X);
-						c.rotateX(0.33);
+						list = rotateObjects(list, .33, X);
+						c.rotateX(0.1);
 						break;
 					case SDLK_DOWN:
-						//list = rotateObjects(list, -.33, X);
-						c.rotateX(-0.33);
+						list = rotateObjects(list, -.33, X);
+						c.rotateX(-0.1);
 						break;
 					case SDLK_LEFT:
-						//list = rotateObjects(list, .33, Y);
-						c.rotateY(0.33);
+						list = rotateObjects(list, .33, Y);
+						c.rotateY(0.1);
 						break;
 					case SDLK_RIGHT:
-						c.rotateY(-0.33);
-						//list = rotateObjects(list, -0.33, Y);
+						c.rotateY(-0.1);
+						list = rotateObjects(list, -0.33, Y);
 						break;
 					case SDLK_a:
 						printf("a\n");
-						//list = translate(list, X, -1000);
-						c.translateX(-100);
+						list = translate(list, X, -1000);
+						c.translateX(100);
 						break;
 					case SDLK_s:
 						printf("s\n");
-						//list = translate(list, Y, 1000);
-						c.translateY(100);
+						list = translate(list, Y, 1000);
+						c.translateY(-100);
 						break;
 					case SDLK_d:
 						printf("d\n");
-						//list = translate(list, X, 1000);
-						c.translateX(100);
+						list = translate(list, X, 1000);
+						c.translateX(-100);
 						break;
 					case SDLK_w:
 						printf("w\n");
-						//list = translate(list, Y, -1000);
-						c.translateY(-100);
+						list = translate(list, Y, -1000);
+						c.translateY(100);
 						break;
 					case SDLK_q:
 						printf("q\n");
-						//list = translate(list, Z, 1000);
-						c.translateZ(100);
+						list = translate(list, Z, -1000);
+						c.translateZ(-100);
 						break;
 					case SDLK_e:
 						printf("e\n");
-						//list = translate(list, Z, 1000);
+						list = translate(list, Z, 1000);
 						c.translateZ(100);
 						break;
 					case SDLK_x:
@@ -247,8 +249,8 @@ int main(int argc, char* args[])
 					DisplayList temp = list;
 					temp = applyDelta(c, list);
 					//c.resetAngle();
-					//render(gRenderer, temp);
-					renderWireframe(gRenderer, temp);
+					render(gRenderer, temp);
+					//renderWireframe(gRenderer, list);
 					SDL_RenderPresent(gRenderer);
 					SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0xFF);
 					SDL_RenderClear(gRenderer);

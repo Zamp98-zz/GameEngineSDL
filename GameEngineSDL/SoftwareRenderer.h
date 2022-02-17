@@ -50,9 +50,9 @@ class Resolution {
 	public:
 		int width;
 		int height;
-		Resolution(int w, int h) {
-			width = w;
-			height = h;
+		Resolution() {
+			width = SCREEN_WIDTH;
+			height = SCREEN_HEIGHT;
 		}
 };
 
@@ -60,6 +60,7 @@ class Perspective: public Position {
 	public:
 		float matrix[DIMENSION][DIMENSION];
 		bool isSet;
+		float Z0;
 		Perspective() {
 			int i;
 			int j;
@@ -72,12 +73,15 @@ class Perspective: public Position {
 		void setProjectionMatrix(const float& angleOfView, const float& near, const float& far)
 		{
 			// set the basic projection matrix
-			float scale = 1 / tan(angleOfView * 0.5 * M_PI / 180);
-			matrix[0][0] = scale; // scale the x coordinates of the projected point 
-			matrix[1][1] = scale; // scale the y coordinates of the projected point 
-			matrix[2][2] = -far / (far - near); // used to remap z to [0,1] 
-			matrix[3][2] = -far * near / (far - near); // used to remap z [0,1] 
-			matrix[2][3] = -1; // set w = -z 
+			Z0 = (SCREEN_WIDTH) / tan((angleOfView * 0.5) * 3.14159265 / 180.0);
+			float a = (float)SCREEN_WIDTH / SCREEN_HEIGHT;
+			float q = far / (far - near);
+			float fov = 1 / tan(angleOfView * 0.5 * M_PI / 180);
+			matrix[0][0] = a * fov;
+			matrix[1][1] = fov;
+			matrix[2][2] = q;
+			matrix[3][2] = (-far*near) / (far - near);
+			matrix[2][3] = 1;
 			matrix[3][3] = 0;
 			isSet = true;
 		}
@@ -96,8 +100,8 @@ class Camera{
 		Position pos;
 		Angle angle;
 		Camera() {
-			fov = 90.0;
-			perspective.setProjectionMatrix(fov, 0.1, 100);
+			fov = 45.0;
+			perspective.setProjectionMatrix(fov, 0.1, 1000);
 			pos.x = pos.y = pos.z = 0.0;
 			angle.x = angle.z = angle.y = 0.0;
 		}

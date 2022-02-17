@@ -3,6 +3,7 @@
 float indentity[DIMENSION][DIMENSION] = { {1, 0, 0, 0},{0, 1, 0, 0},{0, 0, 1, 0},{0, 0, 0, 1} };
 
 
+
 Matrix rotateZ(float a[DIMENSION][DIMENSION], float angle) {
 	float c = cos(angle);//avoid recalculation
 	float s = sin(angle);

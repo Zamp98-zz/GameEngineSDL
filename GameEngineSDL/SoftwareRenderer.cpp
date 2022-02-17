@@ -85,9 +85,9 @@ void render(SDL_Renderer* gRenderer, DisplayList l) {
 	int i;
 	Perspective p;
 	if (!p.isSet)
-		p.setProjectionMatrix(90, 0.1, 100);
+		p.setProjectionMatrix(90, 0.1, 1000);
 	l = applyPerspective(l, p);
-	l = scale(originalScale, l);
+	//l = scale(originalScale, l);
 
 	for (i = 0; i < t; i++) {
 		int u = l.objects[i].faceAmount;
@@ -137,7 +137,8 @@ void renderWireframe(SDL_Renderer* gRenderer, DisplayList l) {
 	Perspective p;
 	if(!p.isSet)
 		p.setProjectionMatrix(90, 0.1, 100);
-	//l = applyPerspective(l, p);
+	l = applyPerspective(l, p);
+	//l = scale(originalScale, l);
 	for (i = 0; i < t; i++) {
 		int u = l.objects[i].faceAmount;
 		int j;
@@ -193,42 +194,54 @@ void renderWireframe(SDL_Renderer* gRenderer, DisplayList l) {
 	}
 }
 
-DisplayList center(DisplayList l, Resolution r) {
+Position objectCenter(Entity e) {
+	int t = e.vertexAmount;
+	int i;
+	Position v;
+	v.x = v.y = v.z = 0;
+	for (i = 0; i < t; i++) {
+		v.x += e.Vertices[i].x;
+		v.y += e.Vertices[i].y;
+		v.z += e.Vertices[i].z;
+	}
+	v.x = v.x / t;
+	v.y = v.y / t;
+	v.z = v.z / t;
+	return v;
+}
+
+DisplayList centerScreen(DisplayList l, Resolution r) {
 	float tX = r.width / 2;
 	float tY = r.height / 2;
 	//translate
+	int t = l.objects.size();
+	int i;
+	//should center only one object!
+	for (i = 0; i < t; i++) {
+		Position p = objectCenter(l.objects[i]);
+		Position delta;
+		delta.x = p.x - tX;
+		delta.y = p.y - tY;
+		l = translate(l, X, -delta.x);
+		l = translate(l, Y, -delta.y);
+	}
 	return l;
 }
 
 DisplayList applyPerspective(DisplayList l, Perspective p) {
 	int i;
+	p.setProjectionMatrix(90, 0.1, 1000);
 	for (i = 0; i < l.objects.size(); i++) {
 		int j;
 		for (j = 0; j < l.objects[i].Vertices.size(); j++) {
-			/*Position original;
+
+			Position original;
 			original.x = l.objects[i].Vertices[j].x;
 			original.y = l.objects[i].Vertices[j].y;
 			original.z = l.objects[i].Vertices[j].z;
-			l.objects[i].Vertices[j].x = original.x * p.z / (p.z + original.z);
-			l.objects[i].Vertices[j].y = original.y * p.z / (p.z + original.z);*/
-			//out = in * M;
-			Matrix temp;
-			temp.init();
-			temp.values[0][0] = l.objects[i].Vertices[j].x * p.matrix[0][0] + l.objects[i].Vertices[j].y * p.matrix[1][0] + l.objects[i].Vertices[j].z * p.matrix[2][0] + /* in.z = 1 */ p.matrix[3][0];
-			temp.values[0][1] = l.objects[i].Vertices[j].x * p.matrix[0][1] + l.objects[i].Vertices[j].y * p.matrix[1][1] + l.objects[i].Vertices[j].z * p.matrix[2][1] + /* in.z = 1 */ p.matrix[3][1];
-			temp.values[0][2] = l.objects[i].Vertices[j].x * p.matrix[0][2] + l.objects[i].Vertices[j].y * p.matrix[1][2] + l.objects[i].Vertices[j].z * p.matrix[2][2] + /* in.z = 1 */ p.matrix[3][2];
-			float w = l.objects[i].Vertices[j].x * p.matrix[0][3] + l.objects[i].Vertices[j].y * p.matrix[1][3] + l.objects[i].Vertices[j].z * p.matrix[2][3] + /* in.z = 1 */ p.matrix[3][3];
-
-			// normalize if w is different than 1 (convert from homogeneous to Cartesian coordinates)
-			if (w != 1) {
-				temp.values[0][0] /= w;
-				temp.values[0][1] /= w;
-				temp.values[0][2] /= w;
-			}
-			l.objects[i].Vertices[j].x = temp.values[0][0];
-			l.objects[i].Vertices[j].y = temp.values[0][1];
-			l.objects[i].Vertices[j].z = temp.values[0][2];
-			l.objects[i].Vertices[j].w = w;
+			l.objects[i].Vertices[j].x = original.x * p.Z0 / (p.Z0 + original.z);
+			l.objects[i].Vertices[j].y = original.y * p.Z0 / (p.Z0 + original.z);
+			l.objects[i].Vertices[j].z = original.z;
 		}
 	}
 	return l;
@@ -274,29 +287,62 @@ DisplayList applyDelta(Camera c, DisplayList l) {
 		int u = l.objects[i].Vertices.size();
 		int j;
 		for (j = 0; j < u; j++) {
+			Matrix temp;
+			temp.init();
+			//column vector
+			temp.values[0][0] = l.objects[i].Vertices[j].x;
+			temp.values[0][1] = l.objects[i].Vertices[j].y;
+			temp.values[0][2] = l.objects[i].Vertices[j].z;
+			//temp.values[0][3] = l.objects[i].Vertices[j].w;
+			//distance from camera to the vertex
 			delta.x = (c.pos.x - l.objects[i].Vertices[j].x);
 			delta.y = (c.pos.y - l.objects[i].Vertices[j].y);
 			delta.z = (c.pos.z - l.objects[i].Vertices[j].z);
+
+			//MOVE - (camera position)
+			temp.values[0][0] -= c.pos.x;
+			temp.values[0][1] -= c.pos.y;
+			temp.values[0][2] -= c.pos.z;
 			if (c.angle.x != 0) {
-				l = rotateObjects(l, X, c.angle.x);
+				//move the vertex delta x, delta y and delta z to make the camera look the origin
+				//rotate
+				// move back to the original position
+				temp = rotateX(temp.values, -c.angle.x);
+
+				//l = rotateObjects(l, X, c.angle.x);
 			}
 			if (c.angle.y != 0) {
-				l = rotateObjects(l, Y, c.angle.y);
+				//l = rotateObjects(l, Y, c.angle.y);
+				temp = rotateY(temp.values, -c.angle.y);
 			}
 			if (c.angle.z != 0) {
-				l = rotateObjects(l, Z, c.angle.z);
+				//l = rotateObjects(l, Z, c.angle.z);
+				temp = rotateZ(temp.values, -c.angle.z);
 			}
-			c.angle.x = c.angle.y = c.angle.z = 0;
+			//TODO restore the position
+			temp.values[0][0] += c.pos.x;
+			temp.values[0][1] += c.pos.y;
+			temp.values[0][2] += c.pos.z;
+			//c.angle.x = c.angle.y = c.angle.z = 0;
 			//translate according with the delta
-			if (delta.x != 0) {
-				l = translate(l, X, delta.x);
-			}
-			if (delta.y != 0) {
-				l = translate(l, Y, delta.y);
-			}
-			if (delta.z == 0) {
-				l = translate(l, Z, delta.z);
-			}
+			
+			//l = translate(l, X, delta.x);
+			temp = translateX(temp.values, delta.x);
+			
+			
+			//l = translate(l, Y, delta.y);
+			temp = translateY(temp.values, delta.y);
+			
+			
+			//l = translate(l, Z, delta.z);
+			temp = translateZ(temp.values, delta.z);
+			
+			l.objects[i].Vertices[j].x = temp.values[0][0];
+			l.objects[i].Vertices[j].y = temp.values[0][1];
+			l.objects[i].Vertices[j].z = temp.values[0][2];
+			l.objects[i].Vertices[j].w = temp.values[0][3];
+			Resolution r;
+			l = centerScreen(l, r);
 		}
 	}
 	return l;
