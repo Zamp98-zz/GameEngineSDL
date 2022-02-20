@@ -4,6 +4,16 @@
 #include <math.h>
 #define DIMENSION 4
 
+
+
+
+typedef struct vector3d {
+	float x;
+	float y;
+	float z;
+	float w;
+}Vector3f;
+
 class Matrix {
 public:
 	float values[DIMENSION][DIMENSION];

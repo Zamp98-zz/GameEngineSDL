@@ -8,16 +8,47 @@
 #define X -1
 #define Y 0
 #define Z 1
-const int SCREEN_WIDTH = 1024;
-const int SCREEN_HEIGHT = 600;
+const int SCREEN_WIDTH = 640;
+const int SCREEN_HEIGHT = 480;
 
 using namespace std;
 
-typedef struct position {
-	float x;
-	float y;
-	float z;
-}Position;
+class Position {
+	public:
+		float x;
+		float y;
+		float z;
+		float w;
+		Position() {
+			x = y = z = w = 0;
+		}
+		Position toPosition(Matrix m) {
+			Position temp;
+			temp.x = m.values[0][0];
+			temp.y = m.values[0][1];
+			temp.z = m.values[0][2];
+			temp.w = m.values[0][3];
+			return temp;
+		}
+		Position columnToPosition(Matrix m) {
+			Position temp;
+			temp.x = m.values[0][0];
+			temp.y = m.values[1][0];
+			temp.z = m.values[2][0];
+			temp.w = m.values[3][0];
+			return temp;
+		}
+		Matrix toMatrixColumn(Position p) {
+			Matrix m;
+			m.init();
+			m.values[0][0] = p.x;
+			m.values[0][1] = p.y;
+			m.values[0][2] = p.z;
+			m.values[0][3] = p.w;
+			return m;
+		}
+
+};
 typedef struct speed {
 	float x;
 	float y;
@@ -28,22 +59,15 @@ typedef struct speed {
 class Object {
 	public:
 		Position pos;
-		Entity body;
+		//Entity body;
 		float mass;
 		Speed speed;
 		float sc;
-		Entity shape;
+		Entity shape;//geometric informations
 		Object(Entity e) {
 			shape = e;
 		}
-		void rotate(float degX, float degY, float degZ) {
-		}
-		void translate(float x, float y, float z) {
-
-		}
-		void scale(float s) {
-			
-		}
+		
 };
 
 class Resolution {
@@ -68,6 +92,7 @@ class Perspective: public Position {
 				for (j = 0; j < DIMENSION; j++)
 					matrix[i][j] = 0;
 			isSet = false;
+			Z0 = (SCREEN_WIDTH) / tan((90 * 0.5) * 3.14159265 / 180.0);
 		}
 
 		void setProjectionMatrix(const float& angleOfView, const float& near, const float& far)
@@ -100,7 +125,7 @@ class Camera{
 		Position pos;
 		Angle angle;
 		Camera() {
-			fov = 45.0;
+			fov = 90.0;
 			perspective.setProjectionMatrix(fov, 0.1, 1000);
 			pos.x = pos.y = pos.z = 0.0;
 			angle.x = angle.z = angle.y = 0.0;
@@ -150,4 +175,4 @@ void renderWireframe(SDL_Renderer* gRenderer, DisplayList l);
 void render(SDL_Renderer* gRenderer, DisplayList l);
 DisplayList applyPerspective(DisplayList l, Perspective p);
 DisplayList rotateObjects(DisplayList l, float angle, int axis);  
-DisplayList translate(DisplayList l, int axis, float delta);
+Object translate(Object o, int axis, float delta);
