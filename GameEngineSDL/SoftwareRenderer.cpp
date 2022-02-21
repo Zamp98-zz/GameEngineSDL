@@ -1,9 +1,9 @@
 #include "SoftwareRenderer.h"
 #include <math.h>
 
-Perspective p;
 
-float M[4][4];
+
+
 /*
 void setProjectionMatrix(const float& angleOfView, const float& near, const float& far)
 {
@@ -16,8 +16,8 @@ void setProjectionMatrix(const float& angleOfView, const float& near, const floa
 	M[2][3] = -1; // set w = -z 
 	M[3][3] = 0;
 }*/
-Resolution r;
-float originalScale = 1;
+
+; float originalScale = 1;
 
 DisplayList scale(float s, DisplayList l) {
 	int t = l.objects.size();
@@ -27,7 +27,7 @@ DisplayList scale(float s, DisplayList l) {
 		int j;
 		for (j = 0; j < u; j++) {
 			Matrix temp;
-			temp.init();
+			
 			temp.values[0][0] = l.objects[i].Vertices[j].x;
 			temp.values[0][1] = l.objects[i].Vertices[j].y;
 			temp.values[0][2] = l.objects[i].Vertices[j].z;
@@ -43,6 +43,33 @@ DisplayList scale(float s, DisplayList l) {
 	return l;
 }
 
+Object rotateObject(Object o, int axis, float angle) {
+	int i;
+	int v = o.shape.vertexAmount;
+	for (i = 0; i < v; i++) {
+		Matrix temp;
+
+		temp.values[0][0] = o.shape.Vertices[i].x;
+		temp.values[0][1] = o.shape.Vertices[i].y;
+		temp.values[0][2] = o.shape.Vertices[i].z;
+		temp.values[0][3] = o.shape.Vertices[i].w;
+		if (axis == X) {
+			temp = rotateX(temp.values, angle);
+		}
+		else if (axis == Y) {
+			temp = rotateY(temp.values, angle);
+		}
+		else {
+			temp = rotateZ(temp.values, angle);
+		}
+		o.shape.Vertices[i].x = temp.values[0][0];
+		o.shape.Vertices[i].y = temp.values[0][1];
+		o.shape.Vertices[i].z = temp.values[0][2];
+		o.shape.Vertices[i].w = temp.values[0][3];
+	}
+	return o;
+}
+
 DisplayList rotateObjects(DisplayList l, float angle, int axis) {
 	int t = l.objects.size();
 	int i;
@@ -51,7 +78,7 @@ DisplayList rotateObjects(DisplayList l, float angle, int axis) {
 		int j;
 		for (j = 0; j < u; j++) {
 			Matrix temp;
-			temp.init();
+			
 			temp.values[0][0] = l.objects[i].Vertices[j].x;
 			temp.values[0][1] = l.objects[i].Vertices[j].y;
 			temp.values[0][2] = l.objects[i].Vertices[j].z;
@@ -74,7 +101,11 @@ DisplayList rotateObjects(DisplayList l, float angle, int axis) {
 	return l;
 }
 
-bool outOfBounds() {
+bool outOfBounds(SDL_Vertex vert) {
+	bool x, y;
+	x = y = false;
+	if ((vert.position.x >= 0 && vert.position.x <= SCREEN_WIDTH) && (vert.position.y >= 0 && vert.position.y <= SCREEN_HEIGHT))
+		return true;
 	return false;
 }
 
@@ -111,14 +142,15 @@ void renderObject(Object o, SDL_Renderer* gRenderer) {
 		vert[2].color.a = 255;
 
 		SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
-		SDL_RenderGeometry(gRenderer, NULL, vert, 3, NULL, 0);
+		if(outOfBounds(vert[0])|| outOfBounds(vert[1])|| outOfBounds(vert[2]))
+			SDL_RenderGeometry(gRenderer, NULL, vert, 3, NULL, 0);
 	}
 }
 void render(SDL_Renderer* gRenderer, DisplayList l) {
 	//TODO
 	int t = l.objects.size();
 	int i;
-	Perspective p;
+	
 	
 	//l = scale(originalScale, l);
 	for (i = 0; i < t; i++) {
@@ -183,7 +215,6 @@ void renderWireframe(SDL_Renderer* gRenderer, DisplayList l) {
 	//TODO
 	int t = l.objects.size();
 	int i;
-	Perspective p;
 	
 	for (i = 0; i < t; i++) {
 		int u = l.objects[i].faceAmount;
@@ -225,24 +256,7 @@ Object centerScreen(Object o, Resolution r) {
 	return o;
 }
 
-DisplayList applyPerspective(DisplayList l, Perspective p) {
-	int i;
-	p.setProjectionMatrix(90, 0.1, 1000);
-	for (i = 0; i < l.objects.size(); i++) {
-		int j;
-		for (j = 0; j < l.objects[i].Vertices.size(); j++) {
 
-			Position original;
-			original.x = l.objects[i].Vertices[j].x;
-			original.y = l.objects[i].Vertices[j].y;
-			original.z = l.objects[i].Vertices[j].z;
-			l.objects[i].Vertices[j].x = original.x * p.Z0 / (p.Z0 + original.z);
-			l.objects[i].Vertices[j].y = original.y * p.Z0 / (p.Z0 + original.z);
-			l.objects[i].Vertices[j].z = original.z;
-		}
-	}
-	return l;
-}
 
 Object translate(Object o, int axis, float delta) {
 	int t = o.shape.vertexAmount;
@@ -266,7 +280,7 @@ Object translate(Object o, int axis, float delta) {
 
 		
 		Matrix temp;
-		temp.init();
+		
 		//column vector
 		temp.values[0][0] = o.shape.Vertices[i].x;
 		temp.values[1][0] = o.shape.Vertices[i].y;
@@ -290,21 +304,7 @@ Object translate(Object o, int axis, float delta) {
 }
 //apply position ant rotation delta for the camera
 
-DisplayList applyDelta(Camera c, DisplayList l) {
-	int t = l.objects.size();
-	int i;
 
-	Position delta;
-	for (i = 0; i < t; i++) {
-		int u = l.objects[i].Vertices.size();
-		Object o = l.objects[i];
-		Position center = objectCenter(o);
-
-		o = centerScreen(o, r);
-		l.objects[i] = o.shape;
-	}
-	return l;
-}
 
 /*DisplayList applyDelta(Camera c, DisplayList l) {
 	int t = l.objects.size();

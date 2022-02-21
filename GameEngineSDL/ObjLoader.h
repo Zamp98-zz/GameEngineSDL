@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include "Position.h"
 using namespace std;
 
 struct Color {
@@ -49,6 +50,20 @@ public:
 	vector<Normal> Normals;
 	vector<Face> Faces;
 	vector<Edge> Edges;
+	Position vertexToPosition(int index) {
+		Position p;
+		p.x = Vertices[index].x;
+		p.y = Vertices[index].y;
+		p.z = Vertices[index].z;
+		p.w = Vertices[index].w;
+		return p;
+	}
+	void setVertex(int index,Position p) {
+		Vertices[index].x = p.x;
+		Vertices[index].y = p.y;
+		Vertices[index].z = p.z;
+		Vertices[index].w = p.w;
+	}
 };
 
 Entity loadEntity(std::string path);

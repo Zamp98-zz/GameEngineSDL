@@ -26,11 +26,14 @@ public:
 		}
 		return a;
 	}
-	void init() {
+	Matrix() {
 		int i, j;
 		for (i = 0; i < DIMENSION; i++)
 			for (j = 0; j < DIMENSION; j++)
-				values[i][j] = 0;
+				if (i != j)
+					values[i][j] = 0;
+				else
+					values[i][j] = 1;
 	}
 };
 Matrix scaleMatrix(float a[DIMENSION][DIMENSION], float value);

@@ -72,7 +72,6 @@ Matrix multiplyMatrix(float a[DIMENSION][DIMENSION], float b[DIMENSION][DIMENSIO
 	int r, c;
 	c = r = 4;
 	Matrix ret;
-	ret.init();
 	for (i = 0; i < r; i++)
 	{
 		for (j = 0; j < c; j++)

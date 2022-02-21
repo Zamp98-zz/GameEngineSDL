@@ -9,6 +9,7 @@ and may not be redistributed without written permission.*/
 #include <cmath>
 #include "ObjLoader.h"
 #include "SoftwareRenderer.h"
+#include "Camera.h"
 
 
 //Screen dimension constants
@@ -176,6 +177,7 @@ int main(int argc, char* args[])
 			c.pos.y = 0;
 			c.pos.x = 0;
 			c.pos.z = 500.0;
+			c.setResolution(SCREEN_WIDTH, SCREEN_HEIGHT);
 			while (!quit)
 			{
 				while (SDL_PollEvent(&e) != 0) {
@@ -247,10 +249,11 @@ int main(int argc, char* args[])
 					//Clear screen
 					//Update screen
 					DisplayList temp = list;
-					temp = applyDelta(c, temp);
+					//temp = applyDelta(c, temp);
 					//c.resetAngle();
-					render(gRenderer, temp);
-					renderWireframe(gRenderer, temp);
+					c.cameraRender(temp, gRenderer);
+					//render(gRenderer, temp);
+					//renderWireframe(gRenderer, temp);
 					SDL_RenderPresent(gRenderer);
 					SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0xFF);
 					SDL_RenderClear(gRenderer);

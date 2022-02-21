@@ -149,8 +149,11 @@
     <ClCompile Include="SoftwareRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Matrix.h" />
+    <ClInclude Include="Matrix44f.h" />
     <ClInclude Include="ObjLoader.h" />
+    <ClInclude Include="Position.h" />
     <ClInclude Include="SoftwareRenderer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
