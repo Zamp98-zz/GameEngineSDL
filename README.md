@@ -1,6 +1,7 @@
 # GameEngineSDL
 Game Engine developed using SDL with OpenGL and Software Rendering
 Current state:
+ <br>
  1 - The perspective is working. 
  <br>
  2 - The camera implementation is almost complete.
