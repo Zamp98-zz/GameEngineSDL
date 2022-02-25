@@ -155,6 +155,7 @@
     <ClInclude Include="ObjLoader.h" />
     <ClInclude Include="Position.h" />
     <ClInclude Include="SoftwareRenderer.h" />
+    <ClInclude Include="Vector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

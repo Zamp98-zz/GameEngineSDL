@@ -1,23 +1,7 @@
 #include "SoftwareRenderer.h"
 #include <math.h>
 
-
-
-
-/*
-void setProjectionMatrix(const float& angleOfView, const float& near, const float& far)
-{
-	// set the basic projection matrix
-	float scale = 1 / tan(angleOfView * 0.5 * M_PI / 180);
-	M[0][0] = scale; // scale the x coordinates of the projected point 
-	M[1][1] = scale; // scale the y coordinates of the projected point 
-	M[2][2] = -far / (far - near); // used to remap z to [0,1] 
-	M[3][2] = -far * near / (far - near); // used to remap z [0,1] 
-	M[2][3] = -1; // set w = -z 
-	M[3][3] = 0;
-}*/
-
-; float originalScale = 1;
+float originalScale = 1;
 
 DisplayList scale(float s, DisplayList l) {
 	int t = l.objects.size();
@@ -32,7 +16,7 @@ DisplayList scale(float s, DisplayList l) {
 			temp.values[0][1] = l.objects[i].Vertices[j].y;
 			temp.values[0][2] = l.objects[i].Vertices[j].z;
 			temp.values[0][3] = l.objects[i].Vertices[j].w;
-			temp = scaleMatrix(temp.values, s);
+			temp = temp.scaleMatrix(temp.values, s);
 			l.objects[i].Vertices[j].x = temp.values[0][0];
 			l.objects[i].Vertices[j].y = temp.values[0][1];
 			l.objects[i].Vertices[j].z = temp.values[0][2];
@@ -54,13 +38,13 @@ Object rotateObject(Object o, int axis, float angle) {
 		temp.values[0][2] = o.shape.Vertices[i].z;
 		temp.values[0][3] = o.shape.Vertices[i].w;
 		if (axis == X) {
-			temp = rotateX(temp.values, angle);
+			temp = temp.rotateX(temp.values, angle);
 		}
 		else if (axis == Y) {
-			temp = rotateY(temp.values, angle);
+			temp = temp.rotateY(temp.values, angle);
 		}
 		else {
-			temp = rotateZ(temp.values, angle);
+			temp = temp.rotateZ(temp.values, angle);
 		}
 		o.shape.Vertices[i].x = temp.values[0][0];
 		o.shape.Vertices[i].y = temp.values[0][1];
@@ -84,13 +68,13 @@ DisplayList rotateObjects(DisplayList l, float angle, int axis) {
 			temp.values[0][2] = l.objects[i].Vertices[j].z;
 			temp.values[0][3] = l.objects[i].Vertices[j].w;
 			if (axis == X) {
-				temp = rotateX(temp.values, angle);
+				temp = temp.rotateX(temp.values, angle);
 			}
 			else if (axis == Y) {
-				temp = rotateY(temp.values, angle);
+				temp = temp.rotateY(temp.values, angle);
 			}
 			else {
-				temp = rotateZ(temp.values, angle);
+				temp = temp.rotateZ(temp.values, angle);
 			}
 			l.objects[i].Vertices[j].x = temp.values[0][0];
 			l.objects[i].Vertices[j].y = temp.values[0][1];
@@ -266,13 +250,13 @@ Object translate(Object o, int axis, float delta) {
 	Matrix p = o.pos.toMatrixColumn(o.pos);
 
 	if (axis == X) {
-		p = translateX(p.values, delta);
+		p = p.translateX(p.values, delta);
 	}
 	if (axis == Y) {
-		p = translateY(p.values, delta);
+		p = p.translateY(p.values, delta);
 	}
 	if (axis == Z) {
-		p = translateZ(p.values, delta);
+		p = p.translateZ(p.values, delta);
 	}
 	o.pos = o.pos.columnToPosition(p);
 	for (i = 0; i < t; i++) {
@@ -287,13 +271,13 @@ Object translate(Object o, int axis, float delta) {
 		temp.values[2][0] = o.shape.Vertices[i].z;
 		temp.values[3][0] = o.shape.Vertices[i].w;
 		if (axis == X) {
-			temp = translateX(temp.values, delta);
+			temp = temp.translateX(temp.values, delta);
 		}
 		if (axis == Y) {
-			temp = translateY(temp.values, delta);
+			temp = temp.translateY(temp.values, delta);
 		}
 		if(axis == Z){
-			temp = translateZ(temp.values, delta);
+			temp = temp.translateZ(temp.values, delta);
 		}
 		o.shape.Vertices[i].x = temp.values[0][0];
 		o.shape.Vertices[i].y = temp.values[1][0];
@@ -302,79 +286,3 @@ Object translate(Object o, int axis, float delta) {
 	}
 	return o;
 }
-//apply position ant rotation delta for the camera
-
-
-
-/*DisplayList applyDelta(Camera c, DisplayList l) {
-	int t = l.objects.size();
-	int i;
-	
-	Position delta;
-	for (i = 0; i < t; i++) {
-		int u = l.objects[i].Vertices.size();
-		int j;
-		for (j = 0; j < u; j++) {
-			Matrix temp;
-			temp.init();
-			//column vector
-			temp.values[0][0] = l.objects[i].Vertices[j].x;
-			temp.values[0][1] = l.objects[i].Vertices[j].y;
-			temp.values[0][2] = l.objects[i].Vertices[j].z;
-			//temp.values[0][3] = l.objects[i].Vertices[j].w;
-			//distance from camera to the vertex
-			delta.x = (c.pos.x - l.objects[i].Vertices[j].x);
-			delta.y = (c.pos.y - l.objects[i].Vertices[j].y);
-			delta.z = (c.pos.z - l.objects[i].Vertices[j].z);
-
-			//MOVE - (camera position)
-			//temp.values[0][0] -= c.pos.x;
-			//temp.values[0][1] -= c.pos.y;
-			//temp.values[0][2] -= c.pos.z;
-			if (c.angle.x != 0) {
-				//move the vertex delta x, delta y and delta z to make the camera look the origin
-				//rotate
-				// move back to the original position
-				temp = rotateX(temp.values, -c.angle.x);
-
-				//l = rotateObjects(l, X, c.angle.x);
-			}
-			if (c.angle.y != 0) {
-				//l = rotateObjects(l, Y, c.angle.y);
-				temp = rotateY(temp.values, -c.angle.y);
-			}
-			if (c.angle.z != 0) {
-				//l = rotateObjects(l, Z, c.angle.z);
-				temp = rotateZ(temp.values, -c.angle.z);
-			}
-			//TODO restore the position
-			//temp.values[0][0] += c.pos.x;
-			//temp.values[0][1] += c.pos.y;
-			//temp.values[0][2] += c.pos.z;
-			//c.angle.x = c.angle.y = c.angle.z = 0;
-			//translate according with the delta
-			
-			//l = translate(l, X, delta.x);
-			if (delta.x == delta.y == 0) {//it's like the 
-				l = centerScreen(l, r);
-			}
-			temp = translateX(temp.values, delta.x);
-			
-			
-			//l = translate(l, Y, delta.y);
-			temp = translateY(temp.values, delta.y);
-			
-			
-			//l = translate(l, Z, delta.z);
-			temp = translateZ(temp.values, delta.z);
-			
-			l.objects[i].Vertices[j].x = temp.values[0][0];
-			l.objects[i].Vertices[j].y = temp.values[0][1];
-			l.objects[i].Vertices[j].z = temp.values[0][2];
-			l.objects[i].Vertices[j].w = temp.values[0][3];
-			Resolution r;
-			l = centerScreen(l, r);
-		}
-	}
-	return l;
-}*/

@@ -10,7 +10,7 @@
 #define Y 0
 #define Z 1
 const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+const int SCREEN_HEIGHT = 640;
 
 using namespace std;
 
@@ -20,8 +20,8 @@ public:
 	int width;
 	int height;
 	Resolution() {
-		width = 640;
-		height = 480;
+		width = SCREEN_WIDTH;
+		height = SCREEN_HEIGHT;
 	}
 };
 

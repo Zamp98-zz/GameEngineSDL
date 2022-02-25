@@ -3,6 +3,7 @@
 #include <string>
 #include <fstream>
 #include "Position.h"
+
 using namespace std;
 
 struct Color {
@@ -48,6 +49,7 @@ public:
 	vector<Vertex> Vertices;
 	vector<Texture> Textures;
 	vector<Normal> Normals;
+	vector<Normal> MeshNormals;
 	vector<Face> Faces;
 	vector<Edge> Edges;
 	Position vertexToPosition(int index) {
@@ -63,6 +65,18 @@ public:
 		Vertices[index].y = p.y;
 		Vertices[index].z = p.z;
 		Vertices[index].w = p.w;
+	}
+	void insertMeshNormal(float x, float y, float z) {
+		Normal n;
+		n.x = x;
+		n.y = y;
+		n.z = z;
+		MeshNormals.push_back(n);
+	}
+	void removeFace(int i) {
+		Faces.erase(Faces.begin() + i);
+		faceAmount--;
+		printf("face: %d\n", faceAmount);
 	}
 };
 

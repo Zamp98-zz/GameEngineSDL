@@ -166,17 +166,18 @@ int main(int argc, char* args[])
 			Entity cube = loadEntity("Entity/cube.obj");
 			Entity sphere = loadEntity("Entity/sphere.obj");
 			//Entity map = loadEntity("Entity/MAPHOUSE.obj");
-			Entity c2 = loadEntity("Entity/c2.obj");
+			//Entity c2 = loadEntity("Entity/c2.obj");
 			DisplayList list;
 			//list.insert(sphere);
 			list.insert(cube);
 			//list.insert(map);
 			list = scale(s, list);
 			Camera c;
-			c.fov = 90;
+			c.fov = 160;
 			c.pos.y = 0;
 			c.pos.x = 0;
-			c.pos.z = 500.0;
+			c.pos.z = 400.0;
+			c.direction.z = 1;
 			c.setResolution(SCREEN_WIDTH, SCREEN_HEIGHT);
 			while (!quit)
 			{
@@ -188,18 +189,18 @@ int main(int argc, char* args[])
 					switch (e.key.keysym.sym) {
 					case SDLK_UP:
 						//list = rotateObjects(list, .33, X);
-						c.rotateX(0.1);
+						c.rotateX(0.01);
 						break;
 					case SDLK_DOWN:
 						//list = rotateObjects(list, -.33, X);
-						c.rotateX(-0.1);
+						c.rotateX(-0.01);
 						break;
 					case SDLK_LEFT:
 						//list = rotateObjects(list, .33, Y);
-						c.rotateY(0.1);
+						c.rotateY(0.01);
 						break;
 					case SDLK_RIGHT:
-						c.rotateY(-0.1);
+						c.rotateY(-0.01);
 						//list = rotateObjects(list, -0.33, Y);
 						break;
 					case SDLK_a:
@@ -244,13 +245,14 @@ int main(int argc, char* args[])
 						break;
 					}
 					
-					printf("Camera parameters: angle (x, y, z): %f %f %f\n pos (x, y, z): %f %f %f\n",
-						c.angle.x, c.angle.y, c.angle.z, c.pos.x, c.pos.y, c.pos.z);
+					printf("Camera parameters: angle (x, y, z): %f %f %f\n pos (x, y, z): %f %f %f direction vec X:%f Y:%f Z:%f\n",
+						c.angle.x*100, c.angle.y*100, c.angle.z*100,
+						c.pos.x, c.pos.y, c.pos.z,
+						c.direction.x, c.direction.y, c.direction.z);
 					//Clear screen
 					//Update screen
 					DisplayList temp = list;
 					//temp = applyDelta(c, temp);
-					//c.resetAngle();
 					c.cameraRender(temp, gRenderer);
 					//render(gRenderer, temp);
 					//renderWireframe(gRenderer, temp);

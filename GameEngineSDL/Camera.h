@@ -3,10 +3,9 @@
 #include "Matrix.h"
 #include "ObjLoader.h"
 #include <SDL.h>
+#include "Vector.h"
 
 
-
-;
 
 typedef struct angle {
 	float x;
@@ -14,10 +13,25 @@ typedef struct angle {
 	float z;
 }Angle;
 
+float correctAngle(float angle) {
+	angle = angle * 100;
+	float fact = 360 / 1.75;
+	if(angle > 0)
+		while (angle > fact)
+			angle = angle - fact;
+	else if(angle < 0)
+		while (angle < -fact)
+			angle = angle + fact;
 
+	return angle/100;
+}
 double min(double a, double b) {
 	if (a == b || a < b) return a;
 	else return b;
+}
+
+float scalarProduct(Vector3d a, Vector3d b) {
+	return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
 }
 
 class Camera {
@@ -27,12 +41,14 @@ public:
 	Position pos;
 	Angle angle;
 	Resolution res;
+	Vector3d direction;
 	Camera() {
 		fov = 90.0;
 		setProjectionMatrix(fov, 0.1, 100);
 		pos.x = pos.y = pos.z = 0.0;
 		angle.x = angle.z = angle.y = 0.0;
-		
+		direction.z = 1;
+		direction.x = direction.y = direction.w = 0;
 	}
 	void setResolution(int width, int height) {
 		res.height = height;
@@ -59,12 +75,18 @@ public:
 	}
 	void rotateX(float s) {
 		angle.x += s;
+		angle.x = correctAngle(angle.x);
+		updateVectorAngle();
 	}
 	void rotateY(float s) {
 		angle.y += s;
+		angle.y = correctAngle(angle.y);
+		updateVectorAngle();
 	}
 	void rotateZ(float s) {
 		angle.z += s;
+		angle.z = correctAngle(angle.z);
+		updateVectorAngle();
 	}
 	void setProjectionMatrix(const float& angleOfView, const float& near, const float& far)
 	{
@@ -151,13 +173,61 @@ public:
 			o = translate(o, Z, dist.z);
 		return o;
 	}
+	Vector3d normalizeVector(Vector3d v) {
+		float n = sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+		v.x = v.x / n;
+		v.y = v.y / n;
+		v.z = v.z / n;
+		return v;
+	}
+	Object setMeshNormals(Object o) {
+		int i;
+		for (i = 0; i < o.shape.faceAmount; i++) {
+			Vector3d a, b, cross;
+			int v0, v1, v2;
+			v0 = o.shape.Faces[i].Vertices[0] - 1;
+			v1 = o.shape.Faces[i].Vertices[1] - 1;
+			v2 = o.shape.Faces[i].Vertices[2] - 1;
+
+			a.x = o.shape.Vertices[v1].x - o.shape.Vertices[v0].x;
+			a.y = o.shape.Vertices[v1].y - o.shape.Vertices[v0].y;
+			a.z = o.shape.Vertices[v1].z - o.shape.Vertices[v0].z;
+
+			b.x = o.shape.Vertices[v2].x - o.shape.Vertices[v0].x;
+			b.y = o.shape.Vertices[v2].y - o.shape.Vertices[v0].y;
+			b.z = o.shape.Vertices[v2].z - o.shape.Vertices[v0].z;
+
+			cross = crossProduct(a, b);
+			cross = normalizeVector(cross);
+			o.shape.insertMeshNormal(cross.x, cross.y, cross.z);
+		}
+		return o;
+	}
+	void updateVectorAngle(){
+		Matrix m;
+		m.values[0][0] = this->direction.x;
+		m.values[0][1] = this->direction.y;
+		m.values[0][2] = this->direction.z;
+		m.values[0][3] = 0;
+		
+		m = m.rotateX(m.values, this->angle.x);
+		m = m.rotateY(m.values,this->angle.y);
+		m = m.rotateZ(m.values,this->angle.z);
+		
+		this->direction.x = m.values[0][0];
+		this->direction.y = m.values[0][1];
+		this->direction.z = m.values[0][2];
+	}
+
 	void cameraRender(DisplayList l, SDL_Renderer *gRenderer) {
 		//TODO deltas and blablabla then render
 		int i;
 		int s = l.objects.size();
 		l = toCameraCoordinates(l);
+		
 		for (i = 0; i < s; i++) {
 			Object o = l.objects[i];
+			o = setMeshNormals(o);
 			o = prepareRotation(o);
 			if (angle.x != 0)
 				o = rotateObject(o, X, angle.x);
@@ -165,12 +235,34 @@ public:
 				o = rotateObject(o, Y, angle.y);
 			if (angle.z != 0)
 				o = rotateObject(o, Z, angle.z);
+
+
 			Position dist = distance(o.pos, pos);//distance from camera to the object
 			if (dist.z <= 1)//if its too close or behind the camera
+			{
 				l.removeIndex(i);
-			else
-				l.objects[i] = o.shape;
-
+				printf("do not draw\n");
+			}
+			int j, s;
+			s = o.shape.faceAmount;
+			for (j = 0; j < s; j++) {
+				Vector3d n;
+				n.x = o.shape.MeshNormals[j].x;
+				n.y = o.shape.MeshNormals[j].y;
+				n.z = o.shape.MeshNormals[j].z;
+				Vector3d camera;
+				camera.x = this->direction.x;
+				camera.y = this->direction.y;
+				camera.z = this->direction.z;
+				float a = scalarProduct(n, camera);
+				if (a >= 0) {
+					o.shape.removeFace(j);
+					s--;
+				}
+				printf("product: %d\n", a);
+				//printf("%f %f\n", this->angle.y, correctAngle(this->angle.y));
+			}
+			l.objects[i] = o.shape;
 		}
 		l = applyPerspective(l);
 		
