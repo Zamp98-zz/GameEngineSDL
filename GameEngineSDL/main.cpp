@@ -253,7 +253,7 @@ int main(int argc, char* args[])
 					//c.resetAngle();
 					c.cameraRender(temp, gRenderer);
 					//render(gRenderer, temp);
-					//renderWireframe(gRenderer, temp);
+					renderWireframe(gRenderer, temp);
 					SDL_RenderPresent(gRenderer);
 					SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0xFF);
 					SDL_RenderClear(gRenderer);
