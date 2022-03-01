@@ -163,15 +163,15 @@ int main(int argc, char* args[])
 			SDL_Event e;
 
 			//While application is running
-			//Entity cube = loadEntity("Entity/cube.obj");
+			Entity cube = loadEntity("Entity/cube.obj");
 			Entity p1 = loadEntity("Entity/p1.obj");
 			Entity sphere = loadEntity("Entity/sphere.obj");
 			//Entity map = loadEntity("Entity/MAPHOUSE.obj");
 			//Entity c2 = loadEntity("Entity/c2.obj");
 			DisplayList list;
-			list.insert(p1);
+			//list.insert(p1);
 			//list.insert(sphere);
-			//list.insert(cube);
+			list.insert(cube);
 			//list.insert(map);
 			list = scale(s, list);
 			Camera c;
@@ -179,7 +179,7 @@ int main(int argc, char* args[])
 			c.pos.y = 0;
 			c.pos.x = 0;
 			c.pos.z = 400.0;
-			c.direction.z = -1;
+			c.frontDirection.z = 1;
 			c.setResolution(SCREEN_WIDTH, SCREEN_HEIGHT);
 			while (!quit)
 			{
@@ -191,18 +191,18 @@ int main(int argc, char* args[])
 					switch (e.key.keysym.sym) {
 					case SDLK_UP:
 						//list = rotateObjects(list, .33, X);
-						c.rotateX(0.01);
+						c.rotateX(10);
 						break;
 					case SDLK_DOWN:
 						//list = rotateObjects(list, -.33, X);
-						c.rotateX(-0.01);
+						c.rotateX(-10);
 						break;
 					case SDLK_LEFT:
 						//list = rotateObjects(list, .33, Y);
-						c.rotateY(0.01);
+						c.rotateY(10);
 						break;
 					case SDLK_RIGHT:
-						c.rotateY(-0.01);
+						c.rotateY(-10);
 						//list = rotateObjects(list, -0.33, Y);
 						break;
 					case SDLK_a:
@@ -213,7 +213,7 @@ int main(int argc, char* args[])
 					case SDLK_s:
 						printf("s\n");
 						//list = translate(list, Y, 1000);
-						c.translateY(-100);
+						c.translateY(100);
 						break;
 					case SDLK_d:
 						printf("d\n");
@@ -223,7 +223,7 @@ int main(int argc, char* args[])
 					case SDLK_w:
 						printf("w\n");
 						//list = translate(list, Y, -1000);
-						c.translateY(100);
+						c.translateY(-100);
 						break;
 					case SDLK_q:
 						printf("q\n");
@@ -245,11 +245,11 @@ int main(int argc, char* args[])
 						break;
 					case SDLK_c:
 						printf("c\n");
-						c.rotateZ(0.1);
+						c.rotateZ(10);
 						break;
 					case SDLK_v:
 						printf("v\n");
-						c.rotateZ(-0.1);
+						c.rotateZ(-10);
 						break;
 					default:
 						break;
@@ -258,7 +258,7 @@ int main(int argc, char* args[])
 					printf("Camera parameters: angle (x, y, z): %f %f %f\n pos (x, y, z): %f %f %f direction vec X:%f Y:%f Z:%f\n",
 						c.angle.x*100, c.angle.y*100, c.angle.z*100,
 						c.pos.x, c.pos.y, c.pos.z,
-						c.direction.x, c.direction.y, c.direction.z);
+						c.frontDirection.x, c.frontDirection.y, c.frontDirection.z);
 					//Clear screen
 					//Update screen
 					DisplayList temp = list;

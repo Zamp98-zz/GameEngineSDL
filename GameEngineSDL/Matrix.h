@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <math.h>
 #define DIMENSION 4
-
+#define RADIAN 57.2958
 
 
 
@@ -31,6 +31,7 @@ public:
 					values[i][j] = 1;
 	}
 	Matrix rotateZ(float a[DIMENSION][DIMENSION], float angle) {
+		//angle in radians
 		float c = cos(angle);//avoid recalculation
 		float s = sin(angle);
 		float rotationMatrixZ[DIMENSION][DIMENSION] =
@@ -42,6 +43,7 @@ public:
 	}
 
 	Matrix rotateX(float a[DIMENSION][DIMENSION], float angle) {
+		//angle in radians
 		float c = cos(angle);//avoid recalculation
 		float s = sin(angle);
 		float rotationMatrixX[DIMENSION][DIMENSION] =
@@ -52,6 +54,7 @@ public:
 		return multiplyMatrix(a, rotationMatrixX);
 	}
 	Matrix rotateY(float a[DIMENSION][DIMENSION], float angle) {
+		//angle in radians
 		float c = cos(angle);//avoid recalculation
 		float s = sin(angle);
 		float rotationMatrixY[DIMENSION][DIMENSION] =

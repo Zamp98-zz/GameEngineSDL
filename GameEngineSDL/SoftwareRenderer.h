@@ -6,11 +6,12 @@
 #include <SDL.h>
 #include "Matrix.h"
 #include "Position.h"
+
 #define X -1
 #define Y 0
 #define Z 1
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 640;
+const int SCREEN_WIDTH = 600;
+const int SCREEN_HEIGHT = 600;
 
 using namespace std;
 
