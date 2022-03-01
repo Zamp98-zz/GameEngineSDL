@@ -163,21 +163,23 @@ int main(int argc, char* args[])
 			SDL_Event e;
 
 			//While application is running
-			Entity cube = loadEntity("Entity/cube.obj");
+			//Entity cube = loadEntity("Entity/cube.obj");
+			Entity p1 = loadEntity("Entity/p1.obj");
 			Entity sphere = loadEntity("Entity/sphere.obj");
 			//Entity map = loadEntity("Entity/MAPHOUSE.obj");
 			//Entity c2 = loadEntity("Entity/c2.obj");
 			DisplayList list;
+			list.insert(p1);
 			//list.insert(sphere);
-			list.insert(cube);
+			//list.insert(cube);
 			//list.insert(map);
 			list = scale(s, list);
 			Camera c;
-			c.fov = 160;
+			c.fov = 90;
 			c.pos.y = 0;
 			c.pos.x = 0;
 			c.pos.z = 400.0;
-			c.direction.z = 1;
+			c.direction.z = -1;
 			c.setResolution(SCREEN_WIDTH, SCREEN_HEIGHT);
 			while (!quit)
 			{
@@ -240,6 +242,14 @@ int main(int argc, char* args[])
 					case SDLK_z:
 						printf("z\n");
 						list = scale(0.9, list);
+						break;
+					case SDLK_c:
+						printf("c\n");
+						c.rotateZ(0.1);
+						break;
+					case SDLK_v:
+						printf("v\n");
+						c.rotateZ(-0.1);
 						break;
 					default:
 						break;

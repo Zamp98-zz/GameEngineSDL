@@ -98,36 +98,39 @@ void renderObject(Object o, SDL_Renderer* gRenderer) {
 	int m = o.shape.faceAmount;
 	for (i = 0; i < m; i++) {
 		int v0, v1, v2;//vertex 1, 2 and 3 of the triangle
-		v0 = o.shape.Faces[i].Vertices[0] - 1;
-		v1 = o.shape.Faces[i].Vertices[1] - 1;
-		v2 = o.shape.Faces[i].Vertices[2] - 1;
+		if (o.shape.Faces[i].visible) {
+			v0 = o.shape.Faces[i].Vertices[0] - 1;
+			v1 = o.shape.Faces[i].Vertices[1] - 1;
+			v2 = o.shape.Faces[i].Vertices[2] - 1;
 
-		SDL_Vertex vert[3];
+			SDL_Vertex vert[3];
+
+			vert[0].position.x = o.shape.Vertices[v0].x;
+			vert[0].position.y = o.shape.Vertices[v0].y;
+			vert[0].color.r = 255;
+			vert[0].color.g = 0;
+			vert[0].color.b = 0;
+			vert[0].color.a = 255;
+
+			vert[1].position.x = o.shape.Vertices[v1].x;
+			vert[1].position.y = o.shape.Vertices[v1].y;
+			vert[1].color.r = 0;
+			vert[1].color.g = 0;
+			vert[1].color.b = 255;
+			vert[1].color.a = 255;
+
+			vert[2].position.x = o.shape.Vertices[v2].x;
+			vert[2].position.y = o.shape.Vertices[v2].y;
+			vert[2].color.r = 0;
+			vert[2].color.g = 255;
+			vert[2].color.b = 0;
+			vert[2].color.a = 255;
+
+			SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+			if (outOfBounds(vert[0]) || outOfBounds(vert[1]) || outOfBounds(vert[2]))
+				SDL_RenderGeometry(gRenderer, NULL, vert, 3, NULL, 0);
+		}
 		
-		vert[0].position.x = o.shape.Vertices[v0].x;
-		vert[0].position.y = o.shape.Vertices[v0].y;
-		vert[0].color.r = 255;
-		vert[0].color.g = 0;
-		vert[0].color.b = 0;
-		vert[0].color.a = 255;
-
-		vert[1].position.x = o.shape.Vertices[v1].x;
-		vert[1].position.y = o.shape.Vertices[v1].y;
-		vert[1].color.r = 0;
-		vert[1].color.g = 0;
-		vert[1].color.b = 255;
-		vert[1].color.a = 255;
-
-		vert[2].position.x = o.shape.Vertices[v2].x;
-		vert[2].position.y = o.shape.Vertices[v2].y;
-		vert[2].color.r = 0;
-		vert[2].color.g = 255;
-		vert[2].color.b = 0;
-		vert[2].color.a = 255;
-
-		SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
-		if(outOfBounds(vert[0])|| outOfBounds(vert[1])|| outOfBounds(vert[2]))
-			SDL_RenderGeometry(gRenderer, NULL, vert, 3, NULL, 0);
 	}
 }
 void render(SDL_Renderer* gRenderer, DisplayList l) {

@@ -75,17 +75,17 @@ public:
 	}
 	void rotateX(float s) {
 		angle.x += s;
-		angle.x = correctAngle(angle.x);
+		//angle.x = correctAngle(angle.x);
 		updateVectorAngle();
 	}
 	void rotateY(float s) {
 		angle.y += s;
-		angle.y = correctAngle(angle.y);
+		//angle.y = correctAngle(angle.y);
 		updateVectorAngle();
 	}
 	void rotateZ(float s) {
 		angle.z += s;
-		angle.z = correctAngle(angle.z);
+		//angle.z = correctAngle(angle.z);
 		updateVectorAngle();
 	}
 	void setProjectionMatrix(const float& angleOfView, const float& near, const float& far)
@@ -180,6 +180,21 @@ public:
 		v.z = v.z / n;
 		return v;
 	}
+	Position faceCenter(Object o, int i) {
+		int v0, v1, v2;
+		Vertex* v = o.getVerticesFromFace(i);
+		float x = v[0].x + v[1].x + v[2].x;
+		float y = v[0].y + v[1].y + v[2].y;
+		float z = v[0].z + v[1].z + v[2].z;
+		x = x / 3;
+		y = y / 3;
+		z = z / 3;
+		Position p;
+		p.x = x;
+		p.y = y;
+		p.z = z;
+		return p;
+	}
 	Object setMeshNormals(Object o) {
 		int i;
 		for (i = 0; i < o.shape.faceAmount; i++) {
@@ -224,27 +239,28 @@ public:
 		int i;
 		int s = l.objects.size();
 		l = toCameraCoordinates(l);
-		
+		bool removed = false;
+		vector<bool> hiddenFaces;
 		for (i = 0; i < s; i++) {
 			Object o = l.objects[i];
 			o = setMeshNormals(o);
 			o = prepareRotation(o);
-			if (angle.x != 0)
-				o = rotateObject(o, X, angle.x);
-			if (angle.y != 0)
-				o = rotateObject(o, Y, angle.y);
-			if (angle.z != 0)
-				o = rotateObject(o, Z, angle.z);
+			
+			o = rotateObject(o, X, angle.x);
+			o = rotateObject(o, Y, angle.y);		
+			o = rotateObject(o, Z, angle.z);
 
 
 			Position dist = distance(o.pos, pos);//distance from camera to the object
-			if (dist.z <= 1)//if its too close or behind the camera
+			if (dist.z < 1)//if its too close or behind the camera
 			{
 				l.removeIndex(i);
 				printf("do not draw\n");
+				removed = true;
 			}
 			int j, s;
 			s = o.shape.faceAmount;
+			
 			for (j = 0; j < s; j++) {
 				Vector3d n;
 				n.x = o.shape.MeshNormals[j].x;
@@ -254,18 +270,28 @@ public:
 				camera.x = this->direction.x;
 				camera.y = this->direction.y;
 				camera.z = this->direction.z;
-				float a = scalarProduct(n, camera);
+				Vector3d cameraToObjectFace;
+				Position p = faceCenter(o, j);
+				cameraToObjectFace.x = this->pos.x - p.x;
+				cameraToObjectFace.y = this->pos.y - p.y;
+				cameraToObjectFace.z = this->pos.z - p.z;
+				float a = scalarProduct(n, cameraToObjectFace);
+				printf("face %d angle %f\n", j, a);
 				if (a >= 0) {
-					o.shape.removeFace(j);
-					s--;
+					o.shape.hideFace(j);
+					hiddenFaces.push_back(true);
+					printf("hide face: %d\n", j);
+					//s--;
 				}
-				printf("product: %d\n", a);
-				//printf("%f %f\n", this->angle.y, correctAngle(this->angle.y));
+				
+				
 			}
-			l.objects[i] = o.shape;
+			if(!removed)
+				l.objects[i] = o.shape;
 		}
 		l = applyPerspective(l);
 		
+		//renderWireframe(gRenderer, l);
 		render(gRenderer, l);
 	}
 };

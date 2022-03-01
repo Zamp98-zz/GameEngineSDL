@@ -37,6 +37,13 @@ class Object {
 			shape = e;
 			mass = 0;
 		}
+		Vertex *getVerticesFromFace(int i) {
+			Vertex r[3];
+			r[0] = shape.Vertices[shape.Faces[i].Vertices[0] - 1];
+			r[1] = shape.Vertices[shape.Faces[i].Vertices[1] - 1];
+			r[2] = shape.Vertices[shape.Faces[i].Vertices[2] - 1];
+			return r;
+		}
 		
 };
 

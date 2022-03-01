@@ -32,6 +32,7 @@ struct Face {
 	int id;
 	int capacity;
 	Color color;
+	bool visible;
 	std::vector<int> Vertices;
 	std::vector<int> Normals;
 	std::vector<int> Textures;
@@ -73,10 +74,13 @@ public:
 		n.z = z;
 		MeshNormals.push_back(n);
 	}
+	void hideFace(int i) {
+		Faces[i].visible = false;
+	}
 	void removeFace(int i) {
 		Faces.erase(Faces.begin() + i);
 		faceAmount--;
-		printf("face: %d\n", faceAmount);
+		printf("remove face: %d\n", i);
 	}
 };
 
