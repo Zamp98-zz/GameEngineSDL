@@ -212,7 +212,44 @@ public:
 		p.z = z;
 		return p;
 	}
+	Object backfaceCulling(Object o) {
+		Position dist = objectCenter(o);
+		Vector3d camera, object;
+		int j, s;
+		s = o.shape.faceAmount;
+		camera.x = this->frontDirection.x; camera.y = this->frontDirection.y; camera.z = this->frontDirection.z;
+		object.x = dist.x; object.y = dist.y; object.z = dist.z;
 
+		//backface culling
+		for (j = 0; j < s; j++) {
+			Vector3d n;
+
+			n.x = o.shape.MeshNormals[j].x;
+			n.y = o.shape.MeshNormals[j].y;
+			n.z = o.shape.MeshNormals[j].z;
+
+			Vector3d cameraToObjectFace;
+			Position p = faceCenter(o, j);
+			cameraToObjectFace.x = this->pos.x - p.x;
+			cameraToObjectFace.y = this->pos.y - p.y;
+			cameraToObjectFace.z = this->pos.z - p.z;
+			float a = scalarProduct(n, camera);
+			printf("face %d angle %f\n", j, a);
+			/*printf("camera vectors: front=200(%f, %f, %f), side=200(%f, %f, %f), up=200(%f, %f, %f)\n",
+				this->frontDirection.x, this->frontDirection.y, this->frontDirection.z,
+				this->sideDirection.x, this->sideDirection.y, this->sideDirection.z,
+				this->upDirection.x, this->upDirection.y, this->upDirection.z);*/
+			Vector3d r = normalizeVector(cameraToObjectFace);
+			r = sumVectors(n, r);
+			if ((a >= 0) && !(r.z == 0)) {
+				o.shape.hideFace(j);
+				//hiddenFaces.push_back(true);
+				printf("hide face: %d\n", j);
+				//s--;
+			}
+		}
+		return o;
+	}
 	void updateVectorAngle(){
 		//rotate the 3 vectors
 		Angle a = this->angle;
@@ -233,49 +270,8 @@ public:
 			Object o = l.objects[i];
 			o = setMeshNormals(o);
 			o = prepareAndRotate(o);
-			
-			//Position dist = distance(o.pos, pos);//distance from camera to the object
-			/*if (dist.z < 1)//if its too close or behind the camera
-			{
-				l.removeIndex(i);
-				printf("do not draw\n");
-				removed = true;
-			}*/
-			Position dist = objectCenter(o);
-			Vector3d camera, object;
-			int j, s;
-			s = o.shape.faceAmount;
-			camera.x = this->frontDirection.x; camera.y = this->frontDirection.y; camera.z = this->frontDirection.z;
-			object.x = dist.x; object.y = dist.y; object.z = dist.z;
+			o = backfaceCulling(o);
 
-
-			for (j = 0; j < s; j++) {
-				Vector3d n;
-				
-				n.x = o.shape.MeshNormals[j].x;
-				n.y = o.shape.MeshNormals[j].y;
-				n.z = o.shape.MeshNormals[j].z;
-				
-				Vector3d cameraToObjectFace;
-				Position p = faceCenter(o, j);
-				cameraToObjectFace.x = this->pos.x - p.x;
-				cameraToObjectFace.y = this->pos.y - p.y;
-				cameraToObjectFace.z = this->pos.z - p.z;
-				float a = scalarProduct(n, camera);
-				printf("face %d angle %f\n", j, a);
-				/*printf("camera vectors: front=200(%f, %f, %f), side=200(%f, %f, %f), up=200(%f, %f, %f)\n",
-					this->frontDirection.x, this->frontDirection.y, this->frontDirection.z,
-					this->sideDirection.x, this->sideDirection.y, this->sideDirection.z,
-					this->upDirection.x, this->upDirection.y, this->upDirection.z);*/
-				Vector3d r = normalizeVector(cameraToObjectFace);
-				r = sumVectors(n, r);
-				if ((a >= 0)&&!(r.z == 0)) {
-					o.shape.hideFace(j);
-					//hiddenFaces.push_back(true);
-					printf("hide face: %d\n", j);
-					//s--;
-				}
-			}
 			if(!removed)
 				l.objects[i] = o.shape;
 		}
