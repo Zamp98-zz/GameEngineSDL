@@ -185,7 +185,7 @@ public:
 		float deltaX, deltaY, deltaZ;
 		o.pos = objectCenter(o);
 		Position dist = distance(o.pos, pos);//distance from camera to the object
-		if (dist.x != 0) 
+		if (dist.x != 0)
 			o = translate(o, X, dist.x);
 		if (dist.y != 0)
 			o = translate(o, Y, dist.y);
@@ -196,8 +196,8 @@ public:
 		o = rotateObject(o, Z, this->angle.z);
 		return o;
 	}
-	
-	Position faceCenter(Object o, int i) {
+
+	/*Position faceCenter(Object o, int i) {
 		int v0, v1, v2;
 		Vertex* v = o.getVerticesFromFace(i);
 		float x = v[0].x + v[1].x + v[2].x;
@@ -211,7 +211,7 @@ public:
 		p.y = y;
 		p.z = z;
 		return p;
-	}
+	}*/
 	Object backfaceCulling(Object o) {
 		Position dist = objectCenter(o);
 		Vector3d camera, object;
@@ -229,10 +229,10 @@ public:
 			n.z = o.shape.MeshNormals[j].z;
 
 			Vector3d cameraToObjectFace;
-			Position p = faceCenter(o, j);
+			/*Position p = faceCenter(o, j);
 			cameraToObjectFace.x = this->pos.x - p.x;
 			cameraToObjectFace.y = this->pos.y - p.y;
-			cameraToObjectFace.z = this->pos.z - p.z;
+			cameraToObjectFace.z = this->pos.z - p.z;*/
 			float a = scalarProduct(n, camera);
 			printf("face %d angle %f\n", j, a);
 			/*printf("camera vectors: front=200(%f, %f, %f), side=200(%f, %f, %f), up=200(%f, %f, %f)\n",
@@ -276,7 +276,7 @@ public:
 				l.objects[i] = o.shape;
 		}
 		l = applyPerspective(l);
-		
+
 		renderWireframe(gRenderer, l);
 		render(gRenderer, l);
 	}

@@ -45,7 +45,7 @@ class Object {
 			r[2] = shape.Vertices[shape.Faces[i].Vertices[2] - 1];
 			return r;
 		}
-		
+
 };
 
 class DisplayList {
@@ -61,14 +61,14 @@ class DisplayList {
 		void removeLast(Entity object) {
 			objects.pop_back();
 		}
-	
+
 };
 
 DisplayList scale(float s, DisplayList l);
 void renderWireframe(SDL_Renderer* gRenderer, DisplayList l);
 void render(SDL_Renderer* gRenderer, DisplayList l);
 void renderObject(Object o, SDL_Renderer* gRenderer);
-DisplayList rotateObjects(DisplayList l, float angle, int axis);  
+DisplayList rotateObjects(DisplayList l, float angle, int axis);
 Object translate(Object o, int axis, float delta);
 Object centerScreen(Object o, Resolution r);
 Position objectCenter(Object o);

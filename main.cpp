@@ -98,7 +98,7 @@ bool loadMedia()
 
 void close()
 {
-	//Destroy window	
+	//Destroy window
 	SDL_DestroyRenderer(gRenderer);
 	SDL_DestroyWindow(gWindow);
 	gWindow = NULL;
@@ -142,7 +142,7 @@ int main(int argc, char* args[])
 	int px = 0;
 	int py = 0;
 	float s = 100.0;
-	
+
 	if (!init())
 	{
 		printf("Failed to initialize!\n");
@@ -164,8 +164,8 @@ int main(int argc, char* args[])
 
 			//While application is running
 			Entity cube = loadEntity("Entity/cube.obj");
-			Entity p1 = loadEntity("Entity/p1.obj");
-			Entity sphere = loadEntity("Entity/sphere.obj");
+			//Entity p1 = loadEntity("Entity/p1.obj");
+			//Entity sphere = loadEntity("Entity/sphere.obj");
 			//Entity map = loadEntity("Entity/MAPHOUSE.obj");
 			//Entity c2 = loadEntity("Entity/c2.obj");
 			DisplayList list;
@@ -254,7 +254,7 @@ int main(int argc, char* args[])
 					default:
 						break;
 					}
-					
+
 					printf("Camera parameters: angle (x, y, z): %f %f %f\n pos (x, y, z): %f %f %f direction vec X:%f Y:%f Z:%f\n",
 						c.angle.x*100, c.angle.y*100, c.angle.z*100,
 						c.pos.x, c.pos.y, c.pos.z,
@@ -269,8 +269,8 @@ int main(int argc, char* args[])
 					SDL_RenderPresent(gRenderer);
 					SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0xFF);
 					SDL_RenderClear(gRenderer);
-					SDL_Delay(33);
-					
+					SDL_Delay(1);
+
 				}
 			}
 		}
