@@ -1,7 +1,8 @@
 # depslib dependency file v1.0
-1646944095 source:d:\dev\gameenginesdl\main.cpp
+1647042160 source:d:\dev\gameenginesdl\main.cpp
 	<SDL.h>
 	<SDL_image.h>
+	<SDL_ttf.h>
 	<stdio.h>
 	<string>
 	<cmath>
@@ -401,7 +402,7 @@
 	<stdio.h>
 	<math.h>
 
-1646943651 d:\dev\gameenginesdl\softwarerenderer.h
+1646964461 d:\dev\gameenginesdl\softwarerenderer.h
 	<vector>
 	<string>
 	<fstream>
@@ -410,7 +411,7 @@
 	"Matrix.h"
 	"Position.h"
 
-1646944019 d:\dev\gameenginesdl\camera.h
+1646995917 d:\dev\gameenginesdl\camera.h
 	"SoftwareRenderer.h"
 	"Matrix.h"
 	"ObjLoader.h"
@@ -445,6 +446,11 @@
 1561870398 c:\dev\sdl2-2.0.20\x86_64-w64-mingw32\include\sdl2\sdl_image.h
 	"SDL.h"
 	"SDL_version.h"
+	"begin_code.h"
+	"close_code.h"
+
+1641928995 c:\dev\sdl2-2.0.20\x86_64-w64-mingw32\include\sdl2\sdl_ttf.h
+	"SDL.h"
 	"begin_code.h"
 	"close_code.h"
 

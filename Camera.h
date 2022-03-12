@@ -277,7 +277,7 @@ public:
 		}
 		l = applyPerspective(l);
 
-		renderWireframe(gRenderer, l);
+		//renderWireframe(gRenderer, l);
 		render(gRenderer, l);
 	}
 };

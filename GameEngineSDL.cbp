@@ -29,10 +29,17 @@
 			</Target>
 		</Build>
 		<Compiler>
-			<Add option="-Wall" />
+			<Add option="-march=k8" />
+			<Add option="-std=c++17" />
+			<Add option="-std=c17" />
 			<Add directory="$(#sdl2.include)/SDL2" />
+			<Add directory="$(#sdl2image)" />
+			<Add directory="$(#sdl2ttf)" />
 		</Compiler>
 		<Linker>
+			<Add option="-O3" />
+			<Add option="-lSDL2_image -g `sdl2-config --cflags --libs`" />
+			<Add option="-lSDL2_ttf" />
 			<Add library="mingw32" />
 			<Add library="SDL2main" />
 			<Add library="SDL2.dll" />
@@ -41,10 +48,26 @@
 			<Add library="winmm" />
 			<Add library="dxguid" />
 			<Add directory="$(#sdl2.lib)" />
+			<Add directory="$(#sdl2image.lib)" />
+			<Add directory="$(#sdl2ttf)" />
 		</Linker>
 		<ExtraCommands>
 			<Add after="XCOPY $(#sdl2)\bin\*.dll $(TARGET_OUTPUT_DIR) /D /Y" />
 		</ExtraCommands>
+		<Unit filename="Camera.h" />
+		<Unit filename="Entity/cube.mtl" />
+		<Unit filename="Entity/cube.obj" />
+		<Unit filename="Fonts/arial.ttf" />
+		<Unit filename="Math.h" />
+		<Unit filename="Matrix.cpp" />
+		<Unit filename="Matrix.h" />
+		<Unit filename="ObjLoader.cpp" />
+		<Unit filename="ObjLoader.h" />
+		<Unit filename="Path.h" />
+		<Unit filename="Position.h" />
+		<Unit filename="SoftwareRenderer.cpp" />
+		<Unit filename="SoftwareRenderer.h" />
+		<Unit filename="Vector.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
