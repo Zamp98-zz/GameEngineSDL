@@ -234,7 +234,7 @@ public:
 			cameraToObjectFace.y = this->pos.y - p.y;
 			cameraToObjectFace.z = this->pos.z - p.z;*/
 			float a = scalarProduct(n, camera);
-			printf("face %d angle %f\n", j, a);
+			//printf("face %d angle %f\n", j, a);
 			/*printf("camera vectors: front=200(%f, %f, %f), side=200(%f, %f, %f), up=200(%f, %f, %f)\n",
 				this->frontDirection.x, this->frontDirection.y, this->frontDirection.z,
 				this->sideDirection.x, this->sideDirection.y, this->sideDirection.z,
@@ -244,11 +244,24 @@ public:
 			if ((a >= 0) && !(r.z == 0)) {
 				o.shape.hideFace(j);
 				//hiddenFaces.push_back(true);
-				printf("hide face: %d\n", j);
+				//printf("hide face: %d\n", j);
 				//s--;
 			}
 		}
 		return o;
+	}
+	bool visible(Object o, Camera *c){
+	    //test if a object is invisible for the camera
+	    Position p = objectCenter(o);
+	    Vector3d v;
+	    v.x = p.x = c->pos.x;
+	    v.y = p.y = c->pos.y;
+	    v.z = p.z = c->pos.z;
+	    float angle = scalarProduct(v, c->frontDirection);
+	    printf("Angle %f\n", angle);
+	    if(angle > 0)
+            return true;
+	    return false;
 	}
 	void updateVectorAngle(){
 		//rotate the 3 vectors
@@ -271,7 +284,10 @@ public:
 			o = setMeshNormals(o);
 			o = prepareAndRotate(o);
 			o = backfaceCulling(o);
-
+            if(!visible(o, this)){
+                l.removeIndex(i);
+                removed = true;
+            }
 			if(!removed)
 				l.objects[i] = o.shape;
 		}

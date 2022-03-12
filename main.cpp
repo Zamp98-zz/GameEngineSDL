@@ -178,6 +178,8 @@ SDL_Texture* loadTexture(std::string path)
 	return newTexture;
 }
 
+
+
 int main(int argc, char* args[])
 {
 	//Start up SDL and create window
@@ -224,6 +226,9 @@ int main(int argc, char* args[])
 			c.pos.z = 400.0;
 			c.frontDirection.z = 1;
 			c.setResolution(SCREEN_WIDTH, SCREEN_HEIGHT);
+			float moveX = 0;
+			float moveY = 0;
+			float moveZ = 0;
 			while (!quit)
 			{
 				while (SDL_PollEvent(&e)) {
@@ -231,72 +236,83 @@ int main(int argc, char* args[])
 					if (e.type == SDL_QUIT) {
 						quit = true;
 					}
-					switch (e.key.keysym.sym) {
-					case SDLK_UP:
-						//list = rotateObjects(list, .33, X);
-						c.rotateX(10);
-						break;
-					case SDLK_DOWN:
-						//list = rotateObjects(list, -.33, X);
-						c.rotateX(-10);
-						break;
-					case SDLK_LEFT:
-						//list = rotateObjects(list, .33, Y);
-						c.rotateY(10);
-						break;
-					case SDLK_RIGHT:
-						c.rotateY(-10);
-						//list = rotateObjects(list, -0.33, Y);
-						break;
-					case SDLK_a:
-						printf("a\n");
-						//list = translate(list, X, -1000);
-						c.translateX(100);
-						break;
-					case SDLK_s:
-						printf("s\n");
-						//list = translate(list, Y, 1000);
-						c.translateY(100);
-						break;
-					case SDLK_d:
-						printf("d\n");
-						//list = translate(list, X, 1000);
-						c.translateX(-100);
-						break;
-					case SDLK_w:
-						printf("w\n");
-						//list = translate(list, Y, -1000);
-						c.translateY(-100);
-						break;
-					case SDLK_q:
-						printf("q\n");
-						//list = translate(list, Z, -1000);
-						c.translateZ(-100);
-						break;
-					case SDLK_e:
-						printf("e\n");
-						//list = translate(list, Z, 1000);
-						c.translateZ(100);
-						break;
-					case SDLK_x:
-						printf("x\n");
-						list = scale(1.3, list);
-						break;
-					case SDLK_z:
-						printf("z\n");
-						list = scale(0.9, list);
-						break;
-					case SDLK_c:
-						printf("c\n");
-						c.rotateZ(10);
-						break;
-					case SDLK_v:
-						printf("v\n");
-						c.rotateZ(-10);
-						break;
-					default:
-						break;
-					}
+					switch (e.type){
+					    case SDL_KEYDOWN:{
+                            switch (e.key.keysym.sym) {
+                                case SDLK_UP:
+                                    //list = rotateObjects(list, .33, X);
+                                    c.rotateX(10);
+                                    break;
+                                case SDLK_DOWN:
+                                    //list = rotateObjects(list, -.33, X);
+                                    c.rotateX(-10);
+                                    break;
+                                case SDLK_LEFT:
+                                    //list = rotateObjects(list, .33, Y);
+                                    c.rotateY(10);
+                                    break;
+                                case SDLK_RIGHT:
+                                    c.rotateY(-10);
+                                    //list = rotateObjects(list, -0.33, Y);
+                                    break;
+                                case SDLK_a:
+                                    printf("a\n");
+                                    //list = translate(list, X, -1000);
+                                    moveX = moveX + 1;
+                                    c.translateX(100);
+                                    break;
+                                case SDLK_s:
+                                    printf("s\n");
+                                    //list = translate(list, Y, 1000);
+                                    c.translateY(100);
+                                    break;
+                                case SDLK_d:
+                                    printf("d\n");
+                                    //list = translate(list, X, 1000);
+                                    moveX = moveX - 1;
+                                    c.translateX(-100);
+                                    break;
+                                case SDLK_w:
+                                    printf("w\n");
+                                    //list = translate(list, Y, -1000);
+                                    c.translateY(-100);
+                                    break;
+                                case SDLK_q:
+                                    printf("q\n");
+                                    //list = translate(list, Z, -1000);
+                                    c.translateZ(-100);
+                                    break;
+                                case SDLK_e:
+                                    printf("e\n");
+                                    //list = translate(list, Z, 1000);
+                                    c.translateZ(100);
+                                    break;
+                                case SDLK_x:
+                                    printf("x\n");
+                                    list = scale(1.3, list);
+                                    break;
+                                case SDLK_z:
+                                    printf("z\n");
+                                    list = scale(0.9, list);
+                                    break;
+                                case SDLK_c:
+                                    printf("c\n");
+                                    c.rotateZ(10);
+                                    break;
+                                case SDLK_v:
+                                    printf("v\n");
+                                    c.rotateZ(-10);
+                                    break;
+                                case SDL_MOUSEMOTION:
+                                    printf("mouse\n");
+                                    break;
+                                default:
+                                    break;
+                            }
+                        } break;
+                        case SDL_KEYUP:
+                            break;
+                    }
 
 					printf("Camera parameters: angle (x, y, z): %f %f %f\n pos (x, y, z): %f %f %f direction vec X:%f Y:%f Z:%f\n",
 						c.angle.x*100, c.angle.y*100, c.angle.z*100,
@@ -309,6 +325,7 @@ int main(int argc, char* args[])
 					c.cameraRender(temp, gRenderer);
 					//render(gRenderer, temp);
 					//renderWireframe(gRenderer, temp);
+					//c.translateX(moveX);
 					SDL_RenderPresent(gRenderer);
 					SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0xFF);
 					SDL_RenderClear(gRenderer);
