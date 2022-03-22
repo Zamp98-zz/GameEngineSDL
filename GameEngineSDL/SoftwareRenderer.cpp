@@ -243,7 +243,9 @@ Object centerScreen(Object o, Resolution r) {
 	return o;
 }
 
-
+Vertex translateVertex(Vertex v, int axis, float delta) {
+	return v;
+}
 
 Object translate(Object o, int axis, float delta) {
 	int t = o.shape.vertexAmount;
