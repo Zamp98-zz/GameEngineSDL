@@ -143,8 +143,8 @@ public:
 		//
 		
 		Vertex original = v;
-		v.x = v.x -  1 / (camera.z);
-		v.y = v.y -  1 / (camera.z);
+		v.x = v.x / (camera.z);
+		v.y = v.y / (camera.z);
 		//v.z = v.z -  1 / DISTANCE_FACTOR*(camera.z);
 		printf("a\n");
 		return v;
@@ -166,7 +166,7 @@ public:
 			}
 			l.objects[i] = o.shape;
 		}
-		//l = scale(originalScale, l);
+		l = toCameraCoordinates(l);
 		return l;
 	}
 	/*DisplayList applyPerspective(DisplayList l) {
@@ -311,7 +311,7 @@ public:
 		//TODO deltas and blablabla then render
 		int i;
 		int s = l.objects.size();
-		l = toCameraCoordinates(l);
+		//l = toCameraCoordinates(l);
 		bool removed = false;
 		//vector<bool> hiddenFaces;
 		for (i = 0; i < s; i++) {
