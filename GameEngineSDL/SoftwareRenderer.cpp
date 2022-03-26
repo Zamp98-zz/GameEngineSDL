@@ -3,6 +3,8 @@
 
 float originalScale = 1;
 
+
+
 DisplayList scale(float s, DisplayList l) {
 	int t = l.objects.size();
 	int i;
@@ -99,14 +101,20 @@ void renderObject(Object o, SDL_Renderer* gRenderer) {
 	for (i = 0; i < m; i++) {
 		int v0, v1, v2;//vertex 1, 2 and 3 of the triangle
 		if (o.shape.Faces[i].visible) {
+			
 			v0 = o.shape.Faces[i].Vertices[0] - 1;
 			v1 = o.shape.Faces[i].Vertices[1] - 1;
 			v2 = o.shape.Faces[i].Vertices[2] - 1;
-
+			
+			
 			SDL_Vertex vert[3];
+			vert->color.r = o.shape.Faces[i].color.red;
+			vert->color.g = o.shape.Faces[i].color.green;
+			vert->color.b = o.shape.Faces[i].color.blue;
 
 			vert[0].position.x = o.shape.Vertices[v0].x;
 			vert[0].position.y = o.shape.Vertices[v0].y;
+			
 			vert[0].color.r = 255;
 			vert[0].color.g = 0;
 			vert[0].color.b = 0;

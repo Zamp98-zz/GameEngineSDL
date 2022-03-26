@@ -166,7 +166,7 @@ int main(int argc, char* args[])
 
 			//While application is running
 			Entity cube = loadEntity("Entity/cube.obj");
-			Entity w = loadEntity("Entity/wings3d/parsed_sphere.obj");
+			Entity w = loadEntity("Entity/church.obj");
 			//Entity p1 = loadEntity("Entity/p1.obj");
 			//Entity sphere = loadEntity("Entity/sphere.obj");
 			//Entity map = loadEntity("Entity/MAPHOUSE.obj");
@@ -174,7 +174,7 @@ int main(int argc, char* args[])
 			DisplayList list;
 			//list.insert(p1);
 			//list.insert(sphere);
-			list.insert(cube);
+			list.insert(w);
 			//list.insert(map);
 			list = scale(s, list);
 			Camera c;
@@ -199,18 +199,18 @@ int main(int argc, char* args[])
                             switch (e.key.keysym.sym) {
                                 case SDLK_UP:
                                     //list = rotateObjects(list, .33, X);
-                                    c.rotateX(10);
+                                    c.rotateX(5);
                                     break;
                                 case SDLK_DOWN:
                                     //list = rotateObjects(list, -.33, X);
-                                    c.rotateX(-10);
+                                    c.rotateX(-5);
                                     break;
                                 case SDLK_LEFT:
                                     //list = rotateObjects(list, .33, Y);
-                                    c.rotateY(10);
+                                    c.rotateY(5);
                                     break;
                                 case SDLK_RIGHT:
-                                    c.rotateY(-10);
+                                    c.rotateY(-5);
                                     //list = rotateObjects(list, -0.33, Y);
                                     break;
                                 case SDLK_a:

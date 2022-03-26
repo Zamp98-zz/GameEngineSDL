@@ -22,6 +22,7 @@ Entity loadEntity(std::string path)
 {
 	std::stringstream ss;
 	std::ifstream file;
+	
 	file.open(path.c_str());
 	std::string line;
 	std::string prefix = "";
@@ -60,7 +61,7 @@ Entity loadEntity(std::string path)
 				obj.Normals.push_back(n);
 			}
 			else if (prefix == "usemtl") {
-				//TODO when i'll implement textures
+				std::ifstream mtl;
 			}
 			else if (prefix == "s") {
 				//TODO

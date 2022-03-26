@@ -134,42 +134,9 @@ public:
 		}
 		return out;
 	}
-	Vertex applydistancefactor(Vertex v, Position camera) {
-		//move camera to origin
-		/*v.x = v.x - camera.x;
-		v.y = v.y - camera.y;
-		v.z = v.z - camera.z;
-		*/
-		//
-		
-		Vertex original = v;
-		v.x = v.x / (camera.z);
-		v.y = v.y / (camera.z);
-		//v.z = v.z -  1 / DISTANCE_FACTOR*(camera.z);
-		printf("a\n");
-		return v;
-	}
+
+
 	DisplayList applyPerspective(DisplayList l) {
-		int i;
-		//unsigned char* buffer = new unsigned char[SCREEN_WIDTH * SCREEN_HEIGHT];
-		int s = l.objects.size();
-		Matrix worldToCamera;
-		Position cp = this->pos;
-
-		for (i = 0; i < s; i++) {
-			Object o = l.objects[i];
-			int j;
-			int v = o.shape.vertexAmount;
-
-			for (j = 0; j < v; j++) {
-				o.shape.Vertices[j] = applydistancefactor(o.shape.Vertices[j], this->pos);
-			}
-			l.objects[i] = o.shape;
-		}
-		l = toCameraCoordinates(l);
-		return l;
-	}
-	/*DisplayList applyPerspective(DisplayList l) {
 		int i;
 		//unsigned char* buffer = new unsigned char[SCREEN_WIDTH * SCREEN_HEIGHT];
 		int s = l.objects.size();
@@ -196,14 +163,14 @@ public:
 		}
 		//l = scale(originalScale, l);
 		return l;
-	}*/
+	}
 	DisplayList toCameraCoordinates(DisplayList l) {
 		int i;
 		int s = l.objects.size();
 		for (i = 0; i < s; i++) {
 			Object o = l.objects[i];
-			o = translate(o, X, res.width/2);
-			o = translate(o, Y, res.height/2);
+			o = translate(o, X, SCREEN_WIDTH/2);
+			o = translate(o, Y, SCREEN_HEIGHT/2);
 			o = translate(o, Z, o.pos.z - this->pos.z);
 			l.objects[i] = o.shape;
 		}
@@ -311,7 +278,7 @@ public:
 		//TODO deltas and blablabla then render
 		int i;
 		int s = l.objects.size();
-		//l = toCameraCoordinates(l);
+		l = toCameraCoordinates(l);
 		bool removed = false;
 		//vector<bool> hiddenFaces;
 		for (i = 0; i < s; i++) {
